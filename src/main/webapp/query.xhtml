@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+
+	<ui:composition template="/WEB-INF/tags/layout.xhtml">
+		<ui:define name="content">
+<h:form>
+<p:growl id="growl" showDetail="true" sticky="false" life="2000"/> 
+			<div class="well well-lg">
+		
+			
+				<p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;">
+    <f:facet name="default">
+        <h:outputText value="Status: StandBy" />
+    </f:facet>
+ 
+    <f:facet name="start">
+      <h:graphicImage value="#{queryMB.gifPath}"></h:graphicImage>
+    </f:facet>
+ 
+    <f:facet name="complete">
+        <h:outputText value="Status: Completed" />
+    </f:facet>
+</p:ajaxStatus>	
+				
+				<p:fieldset legend="Kac Lira Eder ?" toggleable="false" toggleSpeed="500">
+					
+<!-- 					<img width="70"  src ="http://www.primefaces.org/showcase/javax.faces.resource/main/images/logoBlue.svg.xhtml" /> -->
+						
+					
+	<p:panelGrid id="panelGridForm" columns="4" >
+			  <f:facet name="header">
+       
+    	<h:outputLabel value="Fiyat Tahmini"></h:outputLabel>
+    </f:facet>
+			  
+			  <h:outputLabel value="İlan no" ></h:outputLabel>
+			  <h:outputLabel value=":" ></h:outputLabel>
+        <h:inputText value="#{queryMB.ilanNo}"></h:inputText>
+        <p:commandButton value="Data Getir  _" action="#{queryMB.getDataFromSahibinden}" update="growl,panel"></p:commandButton>
+       
+       <h:outputLabel id="tahmin" value="Google Tahmin" ></h:outputLabel>
+        <h:outputLabel value=":" ></h:outputLabel>
+        <h:outputLabel id="predict" value="#{queryMB.predictValue}"></h:outputLabel>
+         <p:commandButton value="Tahmin Yap" action="#{queryMB.predict}" update="predict,amazonpredict,growl"></p:commandButton>
+        
+        
+          <h:outputLabel id="tahmin2" value="Amazon Tahmin" ></h:outputLabel>
+        <h:outputLabel value=":" ></h:outputLabel>
+     	<h:outputLabel id="amazonpredict" value="#{queryMB.amazonPredictValue}"></h:outputLabel>
+        <h:outputLabel value="" ></h:outputLabel>
+        </p:panelGrid>
+        
+        		
+       
+	
+	
+					
+					
+	<br></br>				
+			
+			
+			<p:outputPanel id="panel">
+			<p:panelGrid id="panelGridReport" columns="3" >
+						<f:facet name="header">
+       
+    	<h:outputLabel value="Sahiginden.com verileri"></h:outputLabel>
+    </f:facet>
+    					<h:outputLabel value="Fiyat" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:outputLabel value="#{queryMB.emlakQueryItem.fiyat}"></h:outputLabel>
+						
+						<h:outputLabel value="Şehir" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.sehir}">
+							<p:ajax listener="#{queryMB.onSehirChange}" update="ilce,mahalle" />
+							<f:selectItems value="#{queryMB.sehirList}" var="sehir" 
+    							itemLabel="#{sehir.name}" itemValue="#{sehir.name}" />
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="İlce" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu id="ilce" value="#{queryMB.emlakQueryItem.ilce}">
+							<p:ajax listener="#{queryMB.onIlceChange}" update="mahalle" />
+							<f:selectItems value="#{queryMB.ilceList}" var="ilce" 
+    							itemLabel="#{ilce.name}" itemValue="#{ilce.name}" />
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Mahalle" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu id="mahalle" value="#{queryMB.emlakQueryItem.mah}">
+							<f:selectItems value="#{queryMB.mahalleList}" var="mahalle" 
+    							itemLabel="#{mahalle.name}" itemValue="#{mahalle.name}" />
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Krediye Uygun" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.krediyeUygun}">
+							<f:selectItems value="#{queryMB.creditSuitableList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Emlak Tipi" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.emlakTipi}">
+							<f:selectItems value="#{queryMB.emlakTipiList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Yil" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:inputText value="#{queryMB.emlakQueryItem.yil}"></h:inputText>
+						
+						
+						<h:outputLabel value="M2" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:inputText value="#{queryMB.emlakQueryItem.m2}"></h:inputText>
+						
+						<h:outputLabel value="Oda Sayisi" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.odaSayisi}">
+							<f:selectItems value="#{queryMB.odaSayisiList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Banyo Sayisi" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.banyoSayisi}">
+							<f:selectItems value="#{queryMB.banyoSayisiList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Bina Yaşı" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.binaYasi}">
+							<f:selectItems value="#{queryMB.binayasiList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Bina Kat Sayısı" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.binaKatSayisi}">
+							<f:selectItems value="#{queryMB.binaKatSayisiList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Bulunduğu Kat" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.bulunduguKat}">
+							<f:selectItems value="#{queryMB.bulunduguKatList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Isıtma" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.isitma}">
+							<f:selectItems value="#{queryMB.isitmaList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Kullanım Durumu" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.kullanimDurumu}">
+							<f:selectItems value="#{queryMB.kullanimDurumuList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Site içinde" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.siteIcinde}">
+							<f:selectItems value="#{queryMB.siteIcindeList}"/> 
+						</h:selectOneMenu>
+						
+						<h:outputLabel value="Kimden" ></h:outputLabel>
+						<h:outputLabel value=":"></h:outputLabel>
+						<h:selectOneMenu value="#{queryMB.emlakQueryItem.kimden}">
+							<f:selectItems value="#{queryMB.kimdenList}"/> 
+						</h:selectOneMenu>
+	</p:panelGrid>											
+		</p:outputPanel>
+
+					
+				</p:fieldset>
+				
+	
+				
+
+			</div>
+</h:form>
+		</ui:define>
+	</ui:composition>
+
+
+
+</h:body>
+</html>

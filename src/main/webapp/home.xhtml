@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+
+	<ui:composition template="/WEB-INF/tags/layout.xhtml">
+		<ui:define name="content">
+
+
+			<div class="well well-lg">
+			
+					
+				<p:fieldset legend="Home Page" toggleable="false" toggleSpeed="500">
+					<center>
+					<img width="70"  src ="http://www.primefaces.org/showcase/javax.faces.resource/main/images/logoBlue.svg.xhtml" />
+					</center>	
+				</p:fieldset>
+				
+				
+				
+				<p:fieldset legend="Home Page" toggleable="false" toggleSpeed="500">
+				<h:form>
+					<p:messages></p:messages>
+					<p:commandButton value="Krediye uygun guncelle" action="#{sahibindenMB.migrateTapulu}" update="tekrar,insert"></p:commandButton>
+					<p:commandButton value="Krediye uygun değil guncelle" action="#{sahibindenMB.migrateTapusuz}"></p:commandButton>
+					<p:commandButton value="İl/ilce insert" action="#{sahibindenMB.sehirInsert}"></p:commandButton>
+					
+					
+					<p:commandButton value="Mahalle bazlı istanbul insert" action="#{IstanbulMB.migrateTapulu}"></p:commandButton>
+					<br>
+					</br>
+					<p:commandButton value="İlçe Bazlı/Hepsi" action="#{IstanbulMB.ilceBazliHepsi}"></p:commandButton>
+					<p:commandButton value="Güncelle" action="#{IstanbulMB.update}" update="tekrar,insert"></p:commandButton>
+					<p:commandButton value="Job Test" action="#{IstanbulMB.testJob}"></p:commandButton>
+					<p:commandButton value="Tapusuz update" action="#{IstanbulMB.tapusuzUpdate}"></p:commandButton>
+					
+					<p:commandButton value="Start Migrate" action="#{IstanbulMB.startMigrate}"></p:commandButton>
+					<p:commandButton value="File Migrate" action="#{IstanbulMB.exportToFile}"></p:commandButton>
+					
+					<br></br>
+					<p:outputLabel id="tekrar" value="Tekrarlanan=#{sahibindenMB.tekrarlanan}"></p:outputLabel>
+				    <br></br>
+				    <p:outputLabel id="insert" value="insert=#{sahibindenMB.insertYapilan}"></p:outputLabel>
+				    
+				     <br></br>
+				    <p:commandButton value="Fiyat Migrate" action="#{IstanbulMB.fiyatMigrate}"></p:commandButton>
+				
+				</h:form>
+				</p:fieldset>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+
+
+
+</h:body>
+</html>

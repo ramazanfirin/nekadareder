@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+ <h:head>
+       
+    </h:head>
+
+<h:body>
+
+<h:form>
+			
+	<p:panelGrid id="panelGridForm" columns="3" >
+			<f:facet name="header">
+       
+    	<h:outputLabel value="Data Hazırla"></h:outputLabel>
+    </f:facet>
+			
+			  <h:outputLabel value="İlan no:" ></h:outputLabel>
+        <h:inputText value="#{queryMB.ilanNo}"></h:inputText>
+        <p:commandButton value="Getir" action="#{queryMB.getDataFromSahibinden}" ajax="true" update=""></p:commandButton>
+       
+       <h:outputLabel id="tahmin" value="Tahmin" ></h:outputLabel>
+        <h:outputLabel id="predict" value="#{queryMB.predictValue}"></h:outputLabel>
+        		 <p:commandButton value="Tahmin Yap" action="#{queryMB.predict}" update="predict"></p:commandButton>
+       
+	</p:panelGrid>
+	
+		<br></br>	
+	
+	
+	
+	
+	
+					</h:form>
+				
+
+</h:body>
+</html>
