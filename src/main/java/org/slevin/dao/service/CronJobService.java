@@ -42,7 +42,7 @@ public class CronJobService  implements CronJobDao {
 	@Scheduled(cron = "0 40 16 ? * *") //Fire at 10:15am every day
 	public void jobDaily() throws Exception{
 		System.out.println("gunluk job basliyor");
-		sahibindenDao.daireTapuluLast24Hours();
+		//sahibindenDao.daireTapuluLast24Hours();
 		System.out.println("gunluk job bitiyor");
 	}
 	

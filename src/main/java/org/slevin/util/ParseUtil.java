@@ -1,8 +1,12 @@
 package org.slevin.util;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -340,5 +344,54 @@ public static String getObjectFromArray(JsonArray attributesArray,String name){
 	return "";
 	
 }
+
+public static String getStringFromInputStream(InputStream is) {
+
+	BufferedReader br = null;
+	StringBuilder sb = new StringBuilder();
+
+	String line;
+	try {
+
+		br = new BufferedReader(new InputStreamReader(is));
+		while ((line = br.readLine()) != null) {
+			sb.append(line);
+		}
+
+	} catch (IOException e) {
+		e.printStackTrace();
+	} finally {
+		if (br != null) {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	return sb.toString();
+
+}
+
+public static String getValueFromAzureResponse(String string) throws UnsupportedEncodingException{
+	String result="";
+	string = string.replace("b'", "");
+	string = string.replace("'", "");
+	
+	String s2 = new String(string.getBytes(), "UTF-8");
+	s2 = s2.replace("{\"Results\":{\"output1\":{\"type\":\"table\",\"value\":", "");
+	s2 = s2.replace("{\"ColumnNames\":[\"fiyat\",\"il\",\"ilce\",\"mahalle\",\"krediyeUygun\",\"emlaktipi\",\"yil\",\"m2\",\"odasayisi\",\"banyosayisi\",\"binayasi\",\"binakatsayisi\",\"bulundugukat\",\"isitma\",\"kullanimdurumu\",\"siteicinde\",\"kimden\",\"Scored Labels\"],", "");
+	s2 = s2.replace("\"ColumnTypes\":[\"Double\",\"String\",\"String\",\"String\",\"Boolean\",\"String\",\"Int32\",\"Int32\",\"Int32\",\"Int32\",\"Int32\",\"Int32\",\"Int32\",\"String\",\"String\",\"String\",\"String\",\"Double\"],", "");
+	
+	String[] aa = s2.split(",");
+	//JsonValue value = Json.parse(s2);
+	//JsonObject object  = value.asObject();
+	result = aa[17].replace("]]}}}}", "").replace("\"","");
+	
+	
+	return result;
+}
+
 
 }

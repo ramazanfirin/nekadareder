@@ -21,6 +21,7 @@ import org.slevin.common.Ilce;
 import org.slevin.common.Mahalle;
 import org.slevin.common.Sehir;
 import org.slevin.dao.AmazonPredictionDao;
+import org.slevin.dao.AzurePredictionDao;
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.EmlakDao;
 import org.slevin.dao.GooglePredictionDao;
@@ -28,6 +29,7 @@ import org.slevin.dao.IlceDao;
 import org.slevin.dao.MahalleDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
+import org.slevin.util.ConvertUtil;
 import org.slevin.util.EmlakQueryItem;
 import org.slevin.util.HttpClientUtil;
 import org.slevin.util.ParseUtil;
@@ -73,6 +75,9 @@ public class QueryMB implements Serializable {
 	@Autowired
 	AmazonPredictionDao amazonPredictionDao;
 	
+	@Autowired
+	AzurePredictionDao azurePredictionDao;
+	
 	SelectItemUtil selectItemUtil;
 	List<Sehir> sehirList;
 	List<Ilce> ilceList;
@@ -95,6 +100,7 @@ public class QueryMB implements Serializable {
 	String predictValue;
 	
 	String amazonPredictValue;
+	String azurePredictValue;
 	
 	String gifPath;
 	
@@ -160,6 +166,9 @@ public class QueryMB implements Serializable {
 			mahalleList = mahalleDao.findByProperty("semt.ilce.name", emlakQueryItem.getIlce());
 			System.out.println(" getDataFromSahibinden bitti");
 			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+			predictValue ="";
+			amazonPredictValue ="";
+			azurePredictValue="";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -178,27 +187,17 @@ public class QueryMB implements Serializable {
 		
 		//getDataFromSahibinden();
 		try {
-			List<Object> list = new ArrayList<Object>();
-			list.add(emlakQueryItem.getSehir());
-			list.add(emlakQueryItem.getIlce());
-			list.add(emlakQueryItem.getMah());
-			list.add(emlakQueryItem.getKrediyeUygun());
-			list.add(emlakQueryItem.getEmlakTipi());
-			list.add(emlakQueryItem.getYil());
-			list.add(emlakQueryItem.getM2());
-			
-			list.add(emlakQueryItem.getOdaSayisi());
-			list.add(emlakQueryItem.getBanyoSayisi());
-			list.add(emlakQueryItem.getBinaYasi());
-			list.add(emlakQueryItem.getBinaKatSayisi());
-			list.add(emlakQueryItem.getBulunduguKat());
-			list.add(emlakQueryItem.getIsitma());
-			list.add(emlakQueryItem.getKullanimDurumu());
-			list.add(emlakQueryItem.getSiteIcinde());
-			list.add(emlakQueryItem.getKimden());
-			predictValue  = googlePredictionDao.predict(list);
-			
+			prepareEmlakQueryItem();
+			predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem));
 			amazonPredictValue = amazonPredictionDao.predict(emlakQueryItem);
+			try {
+				azurePredictValue = azurePredictionDao.predict(emlakQueryItem);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				azurePredictValue = "";
+			}
+			
 			System.out.println("google="+predictValue+",amazon="+amazonPredictValue);
 			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
 		} catch (Exception e) {
@@ -208,7 +207,13 @@ public class QueryMB implements Serializable {
 		}
 	}
 	
-	
+	public void prepareEmlakQueryItem(){
+		emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
+		emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
+		emlakQueryItem.setBinaYasi(ConvertUtil.prepareBinaYasi(emlakQueryItem.getBinaYasi()));
+		emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
+		emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
+	}
 	
 	
 	
@@ -418,6 +423,16 @@ public class QueryMB implements Serializable {
 
 	public void setGifPath(String gifPath) {
 		this.gifPath = gifPath;
+	}
+
+
+	public String getAzurePredictValue() {
+		return azurePredictValue;
+	}
+
+
+	public void setAzurePredictValue(String azurePredictValue) {
+		this.azurePredictValue = azurePredictValue;
 	}
 
 

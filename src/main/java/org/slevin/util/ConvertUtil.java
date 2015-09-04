@@ -1,5 +1,8 @@
 package org.slevin.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slevin.common.Emlak;
 
 public class ConvertUtil {
@@ -172,4 +175,27 @@ public static String prepareBulunduguKat(String bulunduguKat){
 	return bulunduguKat;
 }
 
+
+public static List<Object> convertToObjectList(EmlakQueryItem emlakQueryItem){
+	List<Object> list = new ArrayList<Object>();
+	list.add(emlakQueryItem.getSehir());
+	list.add(emlakQueryItem.getIlce());
+	list.add(emlakQueryItem.getMah());
+	list.add(emlakQueryItem.getKrediyeUygun());
+	list.add(emlakQueryItem.getEmlakTipi());
+	list.add(emlakQueryItem.getYil());
+	list.add(emlakQueryItem.getM2());
+	
+	list.add(emlakQueryItem.getOdaSayisi());
+	list.add(emlakQueryItem.getBanyoSayisi());
+	list.add(emlakQueryItem.getBinaYasi());
+	list.add(emlakQueryItem.getBinaKatSayisi());
+	list.add(emlakQueryItem.getBulunduguKat());
+	list.add(emlakQueryItem.getIsitma());
+	list.add(emlakQueryItem.getKullanimDurumu());
+	list.add(emlakQueryItem.getSiteIcinde());
+	list.add(emlakQueryItem.getKimden());
+	
+	return list;
+}
 }
