@@ -33,5 +33,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/amazonML/jython-standalone-2.7.0.jar" sourcepath="C:/Users/ETR00529/.m2/repository/org/python/jython-standalone/2.7.0/jython-standalone-2.7.0-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

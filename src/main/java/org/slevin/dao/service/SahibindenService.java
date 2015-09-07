@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.primefaces.component.log.Log;
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.common.Ilce;
@@ -27,9 +26,7 @@ import org.slevin.util.HttpClientUtil;
 import org.slevin.util.MapUtil;
 import org.slevin.util.ParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Constants;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;

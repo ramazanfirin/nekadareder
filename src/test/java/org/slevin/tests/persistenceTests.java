@@ -1,7 +1,5 @@
 package org.slevin.tests;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slevin.common.BinaQueryItem;
@@ -19,11 +16,11 @@ import org.slevin.common.Semt;
 import org.slevin.dao.AmazonPredictionDao;
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.EmlakDao;
+import org.slevin.dao.GooglePredictionDao;
 import org.slevin.dao.IlceDao;
 import org.slevin.dao.ItemsDao;
 import org.slevin.dao.OrdersDao;
 import org.slevin.dao.ParserDao;
-import org.slevin.dao.GooglePredictionDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
 import org.slevin.util.EmlakQueryItem;

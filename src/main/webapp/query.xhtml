@@ -45,18 +45,18 @@
         <h:inputText value="#{queryMB.ilanNo}"></h:inputText>
         <p:commandButton value="Data Getir  _" action="#{queryMB.getDataFromSahibinden}" update="growl,panel,panelGridForm"></p:commandButton>
        
-       <h:outputLabel id="tahmin" value="Google Tahmin" ></h:outputLabel>
+       <h:outputLabel id="tahmin" value="Tahmin1" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
         <h:outputLabel id="predict" value="#{queryMB.predictValue}"></h:outputLabel>
          <p:commandButton value="Tahmin Yap" action="#{queryMB.predict}" update="predict,amazonpredict,azurepredict,growl"></p:commandButton>
         
         
-          <h:outputLabel id="tahmin2" value="Amazon Tahmin" ></h:outputLabel>
+          <h:outputLabel id="tahmin2" value="Tahmin2" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
      	<h:outputLabel id="amazonpredict" value="#{queryMB.amazonPredictValue}"></h:outputLabel>
         <h:outputLabel value="" ></h:outputLabel>
         
-         <h:outputLabel id="tahmin3" value="Azure Tahmin" ></h:outputLabel>
+         <h:outputLabel id="tahmin3" value="Tahmin3" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
      	<h:outputLabel id="azurepredict" value="#{queryMB.azurePredictValue}"></h:outputLabel>
         <h:outputLabel value="" ></h:outputLabel>

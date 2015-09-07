@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.hibernate.HibernateException;
-import org.slevin.common.Emlak;
 import org.slevin.dao.EntityDao;
 import org.springframework.transaction.annotation.Transactional;
 

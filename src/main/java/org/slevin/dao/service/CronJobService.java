@@ -1,8 +1,6 @@
 package org.slevin.dao.service;
 
 
-import java.util.Date;
-
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.CronJobDao;
 import org.slevin.dao.EmlakDao;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Component

@@ -7,8 +7,6 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.slevin.common.Sehir;
-import org.slevin.dao.SehirDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

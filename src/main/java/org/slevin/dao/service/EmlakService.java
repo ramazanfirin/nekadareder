@@ -10,7 +10,6 @@ import org.hibernate.HibernateException;
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.dao.EmlakDao;
-import org.slevin.prime.faces.bean.IstanbulSahibindenBinaMB;
 import org.slevin.util.ParseUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

@@ -30,8 +30,6 @@ import com.google.api.services.prediction.PredictionScopes;
 import com.google.api.services.prediction.model.Analyze;
 import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.Input.InputInput;
-import com.google.api.services.prediction.model.Output;
-import com.google.api.services.prediction.model.Update;
 import com.google.common.io.Closeables;
 
 

@@ -67,4 +67,27 @@
 
 
 
+
+<servlet> 
+<servlet-name>cgi</servlet-name> 
+<servlet-class>org.apache.catalina.servlets.CGIServlet</servlet-class> 
+<init-param> 
+<param-name>debug</param-name> 
+<param-value>0</param-value> 
+</init-param> 
+<init-param> 
+<param-name>cgiPathPrefix</param-name> 
+<param-value>WEB-INF/cgi</param-value> 
+</init-param> 
+<init-param> 
+<param-name>passShellEnvironment</param-name> 
+<param-value>true</param-value> 
+</init-param> 
+<init-param>
+          <param-name>executable</param-name>
+          <param-value>C:\Python34\python.exe</param-value>
+</init-param>
+<load-on-startup>5</load-on-startup> 
+</servlet> 
+
 </web-app>

@@ -1,5 +1,6 @@
 package org.slevin.prime.faces.bean;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,7 +20,6 @@ import org.slevin.dao.MahalleDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
 import org.slevin.util.ConstantsUtil;
-import org.slevin.util.FileUtil;
 import org.slevin.util.ParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,11 +68,22 @@ public class IstanbulSahibindenBinaMB {
 	String ilceBasedQuery = "https://api.sahibinden.com/sahibinden-ral/rest/classifieds/search?category=16633&address_town=__ilceId__&sorting=__sorting__&a1966=__tapuDurumu__language=tr&pagingOffset=__parameterPaging__&pagingSize=__parameterPagingSize__";
 	String sehirBasedQuery ="https://api.sahibinden.com/sahibinden-ral/rest/classifieds/search?category=16633&address_country=1&address_city=__sehirId__&sorting=__sorting__&a1966=__tapuDurumu__language=tr&pagingOffset=__parameterPaging__&pagingSize=__parameterPagingSize__";
 	
+	String inputTextArea;
+	
+	
 	@PostConstruct
     public void init() throws Exception {
 		complatedCount  = sahibindenDao.complatedCount();
 		
     }
+	
+	public void nativeQuery() throws Exception{
+		Process p = Runtime.getRuntime().exec(inputTextArea);
+		p.waitFor();
+		String result = ParseUtil.getStringFromInputStream(p.getInputStream());
+		System.out.println("pyhton result="+result);
+//		closeProcess(p);
+	}
 	
 	public void fiyatMigrate() throws Exception{
 		List<Emlak> emlakList = emlakDao.findunMigretedFiyat(10);
@@ -352,5 +363,13 @@ public class IstanbulSahibindenBinaMB {
 
 	public void setTekrarlanan(Long tekrarlanan) {
 		this.tekrarlanan = tekrarlanan;
+	}
+
+	public String getInputTextArea() {
+		return inputTextArea;
+	}
+
+	public void setInputTextArea(String inputTextArea) {
+		this.inputTextArea = inputTextArea;
 	}
 }

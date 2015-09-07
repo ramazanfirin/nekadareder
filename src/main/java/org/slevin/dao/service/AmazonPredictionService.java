@@ -1,7 +1,5 @@
 package org.slevin.dao.service;
 
-import java.util.List;
-
 import org.slevin.dao.AmazonPredictionDao;
 import org.slevin.util.EmlakQueryItem;
 import org.springframework.stereotype.Component;
@@ -14,7 +12,6 @@ import com.amazonaws.services.machinelearning.model.DescribeMLModelsResult;
 import com.amazonaws.services.machinelearning.model.MLModel;
 import com.amazonaws.services.machinelearning.model.PredictRequest;
 import com.amazonaws.services.machinelearning.model.PredictResult;
-import com.amazonaws.services.machinelearning.model.RealtimeEndpointInfo;
 
 @Component
 @Transactional
