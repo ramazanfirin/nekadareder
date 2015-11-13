@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.slevin.common.Emlak;
 
 public class FileUtil {
-	//public static String fileName = "C:\\Users\\ETR00529\\Desktop\\sahibinden\\cloudData\\prediction.cvs";
-	public static String fileName = "/export/prediction.cvs";
+	public static String fileName = "C:\\Users\\ETR00529\\Desktop\\sahibinden\\cloudData\\Istanbul-Beylikduzu-segment.cvs";
+	//public static String fileName = "/export/prediction.cvs";
 	
 public static void appendToFile(Emlak emlak) throws IOException{
 	File file =new File(fileName);
@@ -21,6 +21,17 @@ public static void appendToFile(Emlak emlak) throws IOException{
     bufferWritter.close();
 
 }
+
+public static void appendToFile(Emlak emlak,File file) throws IOException{
+	FileWriter fileWritter = new FileWriter(file,true);
+    BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+    bufferWritter.write(ConvertUtil.convertCVSFormat(emlak));
+    bufferWritter.newLine();
+    bufferWritter.flush();
+    bufferWritter.close();
+
+}
+
 
 
 public static void resetFile() throws IOException{

@@ -162,6 +162,14 @@
 	<version>v1.6-rev52-1.20.0</version>
 </dependency>
 
+
+    <dependency>     
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-storage</artifactId>
+      <version>v1-rev50-1.20.0</version>   
+    </dependency>
+
+
 <dependency>
 	<groupId>com.amazonaws</groupId>
 	<artifactId>aws-java-sdk-machinelearning</artifactId>
@@ -204,6 +212,11 @@
     <version>2.5.3</version>
 </dependency>
 
+<dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>2.4</version>
+</dependency>
 
     </dependencies>
     

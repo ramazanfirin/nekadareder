@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="BinaQueryItem")
 public class BinaQueryItem {
-
+//deneme                  
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;

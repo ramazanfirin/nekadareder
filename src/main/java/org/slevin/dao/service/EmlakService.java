@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.hibernate.HibernateException;
+import org.python.icu.math.BigDecimal;
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.dao.EmlakDao;
@@ -72,7 +73,7 @@ public class EmlakService extends EntityService<Emlak> implements EmlakDao {
 	
 	
 	public List<Emlak> findunExportedRecords(int limit) throws HibernateException, Exception{
-		 return (List<Emlak>) getEntityManager().createQuery("select x from " + getEntityClass().getSimpleName() + " x where x.exportComplated=false and x.currency is not null and x.fiyatLong < 1000000").setMaxResults(limit).getResultList();
+		 return (List<Emlak>) getEntityManager().createQuery("select x from " + getEntityClass().getSimpleName() + " x where x.exportComplated=false and x.ilce=' Beylikduzu' and x.currency like '%TL&' and x.fiyatLong < 350000 and fiyatLong>180000").setMaxResults(limit).getResultList();
 	}
 
 	public Integer getTekrarlanan() {
@@ -98,6 +99,13 @@ public class EmlakService extends EntityService<Emlak> implements EmlakDao {
 	public List<Emlak> findunMigretedFiyat(int limit)
 			throws HibernateException, Exception {
 		return (List<Emlak>) getEntityManager().createQuery("select x from " + getEntityClass().getSimpleName() + " x where x.fiyatLong=0 and x.fiyat='1.000001E7'").setMaxResults(limit).getResultList();
+	}
+
+	@Override
+	public List<Emlak> exportByIlce(String name, java.math.BigDecimal minimum,
+			java.math.BigDecimal maximum) throws HibernateException, Exception {
+		// TODO Auto-generated method stub
+		return (List<Emlak>) getEntityManager().createQuery("select x from " + getEntityClass().getSimpleName() + " x where x.exportComplated=false and x.ilce=?1 and x.currency like '%TL%' and x.fiyatLong>"+minimum+" and fiyatLong<"+maximum).setParameter(1, " "+name).getResultList();
 	}
 	
 }

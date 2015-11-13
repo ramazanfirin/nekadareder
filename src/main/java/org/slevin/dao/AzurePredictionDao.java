@@ -4,5 +4,5 @@ import org.slevin.util.EmlakQueryItem;
 
 
 public interface AzurePredictionDao {
-	public  String predict(EmlakQueryItem emlakQueryItem) throws Exception;
+	public  String predict(EmlakQueryItem emlakQueryItem,String all) throws Exception;
 }

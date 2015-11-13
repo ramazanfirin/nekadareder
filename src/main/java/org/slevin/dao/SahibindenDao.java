@@ -41,4 +41,5 @@ public interface SahibindenDao extends EntityDao<SahibindenItem> {
 	public void daireTapuluLast24Hours() throws Exception;
 	
 	public void exportToFile() throws Exception;
+	public void exportToFileByIlce(String directoryPath) throws Exception;
 }

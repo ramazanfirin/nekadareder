@@ -34,7 +34,7 @@
 <!-- 					<img width="70"  src ="http://www.primefaces.org/showcase/javax.faces.resource/main/images/logoBlue.svg.xhtml" /> -->
 						
 					
-	<p:panelGrid id="panelGridForm" columns="4" >
+	<p:panelGrid id="panelGridForm" columns="7" >
 			  <f:facet name="header">
        
     	<h:outputLabel value="Fiyat Tahmini"></h:outputLabel>
@@ -44,22 +44,33 @@
 			  <h:outputLabel value=":" ></h:outputLabel>
         <h:inputText value="#{queryMB.ilanNo}"></h:inputText>
         <p:commandButton value="Data Getir  _" action="#{queryMB.getDataFromSahibinden}" update="growl,panel,panelGridForm"></p:commandButton>
-       
+       <p:commandButton value="Tahmin Yap(Genel)" action="#{queryMB.predict}" update="predict,amazonpredict,azurepredict,growl"></p:commandButton>
+        <p:commandButton value="Tahmin Yap(Ilce)" action="#{queryMB.predictBeylikduzu}" update="predictBeylikduzu,amazonpredictBeylikduzu,azurepredictBeylikduzu,growl"></p:commandButton>
+        <p:commandButton value="Tahmin Yap(Ilce/segment)" action="#{queryMB.predictBeylikduzuSegment}" update="predictBeylikduzusegment,amazonpredictBeylikduzusegment,azurepredictBeylikduzusegment,growl"></p:commandButton>
+        
        <h:outputLabel id="tahmin" value="Tahmin1" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
         <h:outputLabel id="predict" value="#{queryMB.predictValue}"></h:outputLabel>
-         <p:commandButton value="Tahmin Yap" action="#{queryMB.predict}" update="predict,amazonpredict,azurepredict,growl"></p:commandButton>
-        
+        <h:outputLabel id="predictBeylikduzu" value="#{queryMB.predictValueBeylikduzu}"></h:outputLabel>
+        <h:outputLabel id="predictBeylikduzusegment" value="#{queryMB.predictValueBeylikduzuSegment}"></h:outputLabel>
+        <h:outputLabel value=""/>
+        <h:outputLabel value=""/>
         
           <h:outputLabel id="tahmin2" value="Tahmin2" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
      	<h:outputLabel id="amazonpredict" value="#{queryMB.amazonPredictValue}"></h:outputLabel>
-        <h:outputLabel value="" ></h:outputLabel>
+        <h:outputLabel id="amazonpredictBeylikduzu" value="#{queryMB.amazonPredictValueBeylikduzu}"></h:outputLabel>
+        <h:outputLabel id="amazonpredictBeylikduzusegment" value="#{queryMB.amazonPredictValueBeylikduzuSegment}"></h:outputLabel>
+        <h:outputLabel value=""/>
+         <h:outputLabel value=""/>
         
          <h:outputLabel id="tahmin3" value="Tahmin3" ></h:outputLabel>
         <h:outputLabel value=":" ></h:outputLabel>
      	<h:outputLabel id="azurepredict" value="#{queryMB.azurePredictValue}"></h:outputLabel>
-        <h:outputLabel value="" ></h:outputLabel>
+        <h:outputLabel id="azurepredictBeylikduzu" value="#{queryMB.azurePredictValueBeylikduzu}"></h:outputLabel>
+       <h:outputLabel id="azurepredictBeylikduzusegment" value="#{queryMB.azurePredictValueBeylikduzuSegment}"></h:outputLabel>
+        <h:outputLabel value=""/>
+         <h:outputLabel value=""/>
         
         
         

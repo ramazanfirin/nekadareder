@@ -1,6 +1,8 @@
 package org.slevin.dao.service;
 
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -383,6 +385,75 @@ int artisMiktari = 100;
 		}
 		
 	}	
+	public void testList(List<Emlak> emlakList){
+		for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			Emlak emlak = (Emlak) iterator.next();
+			if(emlak.getFiyatLong().longValue()<150000 || emlak.getFiyatLong().longValue()>350000){
+				System.out.println("dikkat");
+			}
+		}
+	}
+	
+	
+	public void exportToFileByIlce(String directoryPath) throws Exception{
+		FileUtil.resetFile();
+		Date startDate = new Date();
+		List<Emlak> emlakList ;
+		List<Ilce> ilceList = ilceDao.findByProperty("sehir.name", "İstanbul");
+		for (Iterator iterator = ilceList.iterator(); iterator.hasNext();) {
+			Ilce ilce = (Ilce) iterator.next();
+
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(10000),new BigDecimal(150000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_0.cvs",directoryPath);
+			
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(150000),new BigDecimal(350000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_1.cvs",directoryPath);
+			
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(350000),new BigDecimal(550000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_2.cvs",directoryPath);
+			
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(550000),new BigDecimal(800000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_3.cvs",directoryPath);
+			
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(800000),new BigDecimal(10000000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_4.cvs",directoryPath);
+			
+			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(10000),new BigDecimal(10000000));
+			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_5.cvs",directoryPath);
+			
+//			emlakList = emlakDao.exportByIlce(ilce.getName(), 0,100);
+//			writeToFile(emlakList, ilce.getName() + "_1");
+//			
+			
+			Date endDate = new Date();
+			long duration = endDate.getTime() - startDate.getTime();
+			System.out.println("bitti " + duration + " ms");
+		}
+	
+	
+}	
+
+	
+	public void writeToFile(List<Emlak> emlakList,String fileName,String directoryPath){
+		File file =new File(directoryPath+ File.separator+fileName);
+		for (int i = 0; i < 10; i++) {
+			
+		
+		for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			Emlak emlak = (Emlak) iterator.next();
+			try {
+				
+				FileUtil.appendToFile(emlak,file);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		}
+	}
+	
+	
 	
 }
 

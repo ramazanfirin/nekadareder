@@ -1,6 +1,5 @@
 package org.slevin.prime.faces.bean;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
@@ -14,12 +13,18 @@ import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.common.Mahalle;
 import org.slevin.common.Sehir;
+import org.slevin.dao.AmazonPredictionDao;
+import org.slevin.dao.AzurePredictionDao;
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.EmlakDao;
+import org.slevin.dao.GooglePredictionDao;
 import org.slevin.dao.MahalleDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
 import org.slevin.util.ConstantsUtil;
+import org.slevin.util.ConvertUtil;
+import org.slevin.util.EmlakQueryItem;
+import org.slevin.util.HttpClientUtil;
 import org.slevin.util.ParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,6 +52,15 @@ public class IstanbulSahibindenBinaMB {
 	
 	@Autowired
 	BinaQueryDao binaQueryDao;
+	
+	@Autowired
+	GooglePredictionDao googlePredictionDao;
+	
+	@Autowired
+	AmazonPredictionDao amazonPredictionDao;
+	
+	@Autowired
+	AzurePredictionDao azurePredictionDao;
 	
 	long complatedCount;
 	
@@ -76,6 +90,49 @@ public class IstanbulSahibindenBinaMB {
 		complatedCount  = sahibindenDao.complatedCount();
 		
     }
+	
+	public void predictVersion2() throws Exception{
+		String url = "https://api.sahibinden.com/sahibinden-ral/rest/classifieds/__parameter__?language=tr";
+		List<Emlak> emlakList = emlakDao.findunExportedRecords(10000);
+		for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			try {
+				Emlak emlak = (Emlak)iterator.next();
+				EmlakQueryItem emlakQueryItem = new EmlakQueryItem();
+				String urlTemp = url.replace("__parameter__", emlak.getIlanNo().toString());
+				System.out.println(urlTemp);
+				String result = HttpClientUtil.parse(urlTemp);
+				ParseUtil.parseSingleEmlakData(emlakQueryItem,result);
+				
+				emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
+				emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
+				emlakQueryItem.setBinaYasi(ConvertUtil.prepareBinaYasi(emlakQueryItem.getBinaYasi()));
+				emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
+				emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
+				
+				
+				emlak.setT1(getGooglePredict(emlakQueryItem));
+				emlak.setT2(getAmazonPredict(emlakQueryItem));
+				emlak.setT3(getAzurePredict(emlakQueryItem));
+				emlak.setExportComplated(true);
+				emlakDao.merge(emlak);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
+	}
+	
+	public BigDecimal getGooglePredict(EmlakQueryItem emlakQueryItem) throws Exception {
+		return new BigDecimal(googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),"beylikduzu"));
+	}
+	
+	public BigDecimal getAmazonPredict(EmlakQueryItem emlakQueryItem) throws Exception {
+		return new BigDecimal(amazonPredictionDao.predict(emlakQueryItem,"ML model: IstanbulBeylikduzu.cvs"));
+	}
+	
+	public BigDecimal getAzurePredict(EmlakQueryItem emlakQueryItem) throws Exception {
+		return new BigDecimal(azurePredictionDao.predict(emlakQueryItem,"beylikduzu"));
+	}
 	
 	public void nativeQuery() throws Exception{
 		Process p = Runtime.getRuntime().exec(inputTextArea);
@@ -116,6 +173,10 @@ public class IstanbulSahibindenBinaMB {
 	
 	public void exportToFile() throws Exception{
 		sahibindenDao.exportToFile();
+	}
+	
+	public void exportToFileByIlce() throws Exception{
+		sahibindenDao.exportToFileByIlce("");
 	}
 	
 	

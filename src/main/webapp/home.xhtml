@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+87<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -41,6 +41,7 @@
 					
 					<p:commandButton value="Start Migrate" action="#{IstanbulMB.startMigrate}"></p:commandButton>
 					<p:commandButton value="File Migrate" action="#{IstanbulMB.exportToFile}"></p:commandButton>
+					<p:commandButton value="File Migrate by ilce" action="#{IstanbulMB.exportToFileByIlce}"></p:commandButton>
 					
 					<br></br>
 					<p:outputLabel id="tekrar" value="Tekrarlanan=#{sahibindenMB.tekrarlanan}"></p:outputLabel>
@@ -53,6 +54,9 @@
 				
 				<p:inputTextarea value="#{IstanbulMB.inputTextArea}"></p:inputTextarea>
 				    <p:commandButton value="Native Query" action="#{IstanbulMB.nativeQuery}"></p:commandButton>
+				    
+				    
+				<p:commandButton value="Bulk Predict" action="#{IstanbulMB.predictVersion2}"></p:commandButton>    
 				</h:form>
 				</p:fieldset>
 			</div>

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Index(name="ilan_no",columnList="ilanNo")
 })
 public class Emlak {
-	@Id
+	@Id    
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
@@ -53,6 +53,9 @@ public class Emlak {
 	Date insertDate;
 	Boolean exportComplated;
 
+	BigDecimal t1;
+	BigDecimal t2;
+	BigDecimal t3;
 	
 	public Long getId() {
 		return id;
@@ -227,6 +230,24 @@ public class Emlak {
 	}
 	public void setFiyatLong(BigDecimal fiyatLong) {
 		this.fiyatLong = fiyatLong;
+	}
+	public BigDecimal getT1() {
+		return t1;
+	}
+	public void setT1(BigDecimal t1) {
+		this.t1 = t1;
+	}
+	public BigDecimal getT2() {
+		return t2;
+	}
+	public void setT2(BigDecimal t2) {
+		this.t2 = t2;
+	}
+	public BigDecimal getT3() {
+		return t3;
+	}
+	public void setT3(BigDecimal t3) {
+		this.t3 = t3;
 	}
 
 	

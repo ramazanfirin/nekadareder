@@ -1,6 +1,7 @@
 package org.slevin.prime.faces.bean;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -99,6 +100,14 @@ public class QueryMB implements Serializable {
 	
 	String amazonPredictValue;
 	String azurePredictValue;
+
+	String predictValueBeylikduzu;
+	String amazonPredictValueBeylikduzu;
+	String azurePredictValueBeylikduzu;
+	
+	String predictValueBeylikduzuSegment;
+	String amazonPredictValueBeylikduzuSegment;
+	String azurePredictValueBeylikduzuSegment;
 	
 	String gifPath;
 	
@@ -167,6 +176,9 @@ public class QueryMB implements Serializable {
 			predictValue ="";
 			amazonPredictValue ="";
 			azurePredictValue="";
+			predictValueBeylikduzu ="";
+			amazonPredictValueBeylikduzu ="";
+			azurePredictValueBeylikduzu="";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -181,15 +193,45 @@ public class QueryMB implements Serializable {
 		FacesContext.getCurrentInstance().addMessage("form:message", messageobject);
 	}
 	
+	public void predict2() throws Exception{
+		prepareEmlakQueryItem();
+		Ilce ilce = findIlce();
+		String trainingName = ilce.getId()+"_"+ilce.getName() + findSegment();
+		predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainingName);
+		addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+	}
+	
+	public Ilce findIlce() throws Exception{
+		List<Ilce> ilceList=ilceDao.findByProperty("name",emlakQueryItem.getIlce());
+		return ilceList.get(0);
+
+	}
+	
+	public String findSegment(){
+		String segment="";
+		BigDecimal fiyat = new BigDecimal(emlakQueryItem.getFiyat());
+		
+		if((fiyat.longValue()>150000) && (fiyat.longValue()<350000))
+			segment ="_1.cvs";
+		else if((fiyat.longValue()>350000) && (fiyat.longValue()<550000))
+			segment ="_2.cvs";
+		else if((fiyat.longValue()>550000) && (fiyat.longValue()<800000))
+			segment ="3.cvs";
+		else if((fiyat.longValue()>800000) && (fiyat.longValue()<10000000))
+			segment ="_4.cvs";
+		
+		return segment;
+	}
+	
 	public void predict() throws Exception{
 		
 		//getDataFromSahibinden();
 		try {
 			prepareEmlakQueryItem();
-			predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem));
-			amazonPredictValue = amazonPredictionDao.predict(emlakQueryItem);
+			predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),"all");
+			amazonPredictValue = amazonPredictionDao.predict(emlakQueryItem,"ML model: Prediction3108_2.csv_all_refactured");//ML model: IstanbulBeylikduzu.cvs/
 			try {
-				azurePredictValue = azurePredictionDao.predict(emlakQueryItem);
+				azurePredictValue = azurePredictionDao.predict(emlakQueryItem,"all");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -205,6 +247,54 @@ public class QueryMB implements Serializable {
 		}
 	}
 	
+public void predictBeylikduzu() throws Exception{
+		
+		//getDataFromSahibinden();
+		try {
+			prepareEmlakQueryItem();
+			predictValueBeylikduzu  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),"beylikduzu");
+			amazonPredictValueBeylikduzu = amazonPredictionDao.predict(emlakQueryItem,"ML model: IstanbulBeylikduzu.cvs");//ML model: IstanbulBeylikduzu.cvs/
+			try {
+				azurePredictValueBeylikduzu = azurePredictionDao.predict(emlakQueryItem,"beylikduzu");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				azurePredictValue = "";
+			}
+			
+			System.out.println("google="+predictValue+",amazon="+amazonPredictValue);
+			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			addMessage(FacesMessage.SEVERITY_ERROR,e.getMessage());
+		}
+	}
+	
+public void predictBeylikduzuSegment() throws Exception{
+	
+	//getDataFromSahibinden();
+	try {
+		prepareEmlakQueryItem();
+		predictValueBeylikduzuSegment  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),"beylikduzuSegment");
+		amazonPredictValueBeylikduzuSegment = amazonPredictionDao.predict(emlakQueryItem,"ML model: Istanbul-Beylikduzu-segment.csv");//ML model: IstanbulBeylikduzu.cvs/
+		try {
+			azurePredictValueBeylikduzuSegment = azurePredictionDao.predict(emlakQueryItem,"beylikduzuSegment");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			azurePredictValue = "";
+		}
+		
+		System.out.println("google="+predictValueBeylikduzuSegment+",amazon="+amazonPredictValueBeylikduzuSegment);
+		addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		addMessage(FacesMessage.SEVERITY_ERROR,e.getMessage());
+	}
+}
+
 	public void prepareEmlakQueryItem(){
 		emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
 		emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
@@ -431,6 +521,69 @@ public class QueryMB implements Serializable {
 
 	public void setAzurePredictValue(String azurePredictValue) {
 		this.azurePredictValue = azurePredictValue;
+	}
+
+
+	public String getPredictValueBeylikduzu() {
+		return predictValueBeylikduzu;
+	}
+
+
+	public void setPredictValueBeylikduzu(String predictValueBeylikduzu) {
+		this.predictValueBeylikduzu = predictValueBeylikduzu;
+	}
+
+
+	public String getAmazonPredictValueBeylikduzu() {
+		return amazonPredictValueBeylikduzu;
+	}
+
+
+	public void setAmazonPredictValueBeylikduzu(String amazonPredictValueBeylikduzu) {
+		this.amazonPredictValueBeylikduzu = amazonPredictValueBeylikduzu;
+	}
+
+
+	public String getAzurePredictValueBeylikduzu() {
+		return azurePredictValueBeylikduzu;
+	}
+
+
+	public void setAzurePredictValueBeylikduzu(String azurePredictValueBeylikduzu) {
+		this.azurePredictValueBeylikduzu = azurePredictValueBeylikduzu;
+	}
+
+
+	public String getPredictValueBeylikduzuSegment() {
+		return predictValueBeylikduzuSegment;
+	}
+
+
+	public void setPredictValueBeylikduzuSegment(
+			String predictValueBeylikduzuSegment) {
+		this.predictValueBeylikduzuSegment = predictValueBeylikduzuSegment;
+	}
+
+
+	public String getAmazonPredictValueBeylikduzuSegment() {
+		return amazonPredictValueBeylikduzuSegment;
+	}
+
+
+	public void setAmazonPredictValueBeylikduzuSegment(
+			String amazonPredictValueBeylikduzuSegment) {
+		this.amazonPredictValueBeylikduzuSegment = amazonPredictValueBeylikduzuSegment;
+	}
+
+
+	public String getAzurePredictValueBeylikduzuSegment() {
+		return azurePredictValueBeylikduzuSegment;
+	}
+
+
+	public void setAzurePredictValueBeylikduzuSegment(
+			String azurePredictValueBeylikduzuSegment) {
+		this.azurePredictValueBeylikduzuSegment = azurePredictValueBeylikduzuSegment;
 	}
 
 

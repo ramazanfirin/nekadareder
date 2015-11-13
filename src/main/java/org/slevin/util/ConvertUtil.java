@@ -8,7 +8,7 @@ import org.slevin.common.Emlak;
 public class ConvertUtil {
 public static String convertCVSFormat(Emlak emlak){
 	StringBuffer result = new StringBuffer();
-	result.append(preparePrice(emlak.getFiyat(),emlak.getCurrency()));
+	result.append(preparePrice(emlak.getFiyatLong().longValue(),emlak.getCurrency()));
 	result.append(",");
 	result.append(appendQuata(emlak.getSehir()));
 	result.append(",");
@@ -74,7 +74,7 @@ public static String prepareSiteIcinde(String string){
 }
 
 
-public static String preparePrice(String price,String currency){
+public static String preparePrice(Long price,String currency){
 	Double d = new Double(price);
 	if(currency.contains("EUR"))
 		d = d*ConstantsUtil.EUR;
@@ -173,6 +173,45 @@ public static String prepareBulunduguKat(String bulunduguKat){
 //	return a.toString();
 	
 	return bulunduguKat;
+}
+
+public static EmlakQueryItem convertToEmlakQueryItem(Emlak emlak){
+	EmlakQueryItem emlakQueryItem = new EmlakQueryItem();
+	emlakQueryItem.setAy(emlak.getAy().replace("\"", ""));
+	emlakQueryItem.setBanyoSayisi(emlak.getBanyoSayisi().replace("\"", ""));
+	emlakQueryItem.setBinaKatSayisi(emlak.getBinaKatSayisi().replace("\"", ""));
+	emlakQueryItem.setBinaYasi(emlak.getBinaYasi().replace("\"", ""));
+	emlakQueryItem.setBulunduguKat(emlak.getBulunduguKat().replace("\"", ""));
+	emlakQueryItem.setCurrency(emlak.getCurrency().replace("\"", ""));
+	emlakQueryItem.setEmlakTipi(emlak.getEmlakTipi().replace("\"", ""));
+	emlakQueryItem.setExportComplated(emlak.getExportComplated());
+	emlakQueryItem.setFiyat(emlak.getFiyat().replace("\"", ""));
+	emlakQueryItem.setFiyatLong(emlak.getFiyatLong());
+	
+	emlakQueryItem.setGun(emlak.getGun().replace("\"", ""));
+	emlakQueryItem.setId(emlak.getId());
+	emlakQueryItem.setIlanNo(emlak.getIlanNo());
+	//emlakQueryItem.setIlanTarihi(emlak.getIlanTarihi().replace("\"", ""));
+	emlakQueryItem.setIlce(emlak.getIlce().replace("\"", "").replaceFirst(" ", ""));
+	emlakQueryItem.setInsertDate(emlak.getInsertDate());
+	
+	emlakQueryItem.setIsitma(emlak.getIsitma().replace("\"", ""));
+	emlakQueryItem.setKimden(emlak.getKimden().replace("\"", ""));
+	emlakQueryItem.setKrediyeUygun(emlak.getKrediyeUygun().replace("\"", ""));
+	
+	emlakQueryItem.setKullanimDurumu(emlak.getKullanimDurumu().replace("\"", ""));
+	emlakQueryItem.setLat(emlak.getLat().replace("\"", ""));
+	emlakQueryItem.setLng(emlak.getLng().replace("\"", ""));
+	
+	emlakQueryItem.setM2(emlak.getM2().replace("\"", ""));
+	emlakQueryItem.setMah(emlak.getMah().replace("\"", "").replaceFirst(" ", ""));
+	emlakQueryItem.setOdaSayisi(emlak.getOdaSayisi().replace("\"", ""));
+	emlakQueryItem.setSehir(emlak.getSehir().replace("\"", ""));
+	emlakQueryItem.setSiteIcinde(emlak.getSiteIcinde().replace("\"", ""));
+	
+	emlakQueryItem.setTakas(emlak.getTakas().replace("\"", ""));
+	emlakQueryItem.setYil(emlak.getYil().replace("\"", ""));
+	return emlakQueryItem;
 }
 
 

@@ -32,8 +32,15 @@ public class AzurePredictionService  implements AzurePredictionDao {
 
 	static String pythonCommand = "C:/Users/ETR00529/git/predicitivesahibinden/PredictionSahibinden/key.p12";
 	String url = "https://ussouthcentral.services.azureml.net/workspaces/4448f01b579546e39b07a730a0774600/services/af85449a300345f1a0ddcb9f205093a5/execute?api-version=2.0&details=true"; 
+	String key = "grh2aawJgjFBrt0/YmQNHOE9zzbDROE5Ft3RSnG9snjZEZzAYexNESEaIykG+YLdAvx3q+rEolHKP1WufYqy6g==";
 	
-	  @PostConstruct
+	String urlbeylikduzu = "https://ussouthcentral.services.azureml.net/workspaces/4448f01b579546e39b07a730a0774600/services/09d01890c07343c6914d23d6fc71c5d5/execute?api-version=2.0&details=true";
+	String keyBeylikduzu = "+V7uc3dvsf6xvQ7ysKs5k4alo2yzNsQ0//P1HmGcFcQF9qoO9YTs+d2+f/gW2kB7/ywGC64WCj2vtIca/vXa0w==";
+	
+	String urlbeylikduzusegment ="https://ussouthcentral.services.azureml.net/workspaces/4448f01b579546e39b07a730a0774600/services/39621b0c71b247679489ada230424149/execute?api-version=2.0&details=true";
+	String keybeylikduzusegment ="RkEpZOSkCRjLgJMcnlYjYV1Rly3ht/OMirvGAL9JYR5QCFKIidBBmEtFt7eNbsUmLuE9bhXuZJRrXe7i18rHww==";
+	
+	@PostConstruct
 	  public void init() throws Exception {
 		  Properties prop = new Properties();
 		  prop.load(QueryMB.class.getClassLoader().getResourceAsStream("META-INF/spring/database.properties"));
@@ -42,7 +49,7 @@ public class AzurePredictionService  implements AzurePredictionDao {
 	  
 
 	@Override
-	public String predict(EmlakQueryItem emlakQueryItem) throws Exception {
+	public String predict(EmlakQueryItem emlakQueryItem,String all) throws Exception {
 //		String pythonData=preparePythonData(emlakQueryItem);
 //		System.out.println("pythonData="+pythonData );
 //		Process p = Runtime.getRuntime().exec(pythonData);
@@ -50,7 +57,7 @@ public class AzurePredictionService  implements AzurePredictionDao {
 //		System.out.println("pyhton result="+result);
 //		String a = ParseUtil.getValueFromAzureResponse(result);
 //		return a;
-		String output = predict2(emlakQueryItem);
+		String output = predict2(emlakQueryItem,all);
 		String result= ParseUtil.getValueFromAzureResponse(output);
 		return result;
 	}
@@ -77,7 +84,7 @@ public class AzurePredictionService  implements AzurePredictionDao {
 		return data;
 	}
 	
-public String predict2(EmlakQueryItem emlak) throws ClientProtocolException, IOException{
+public String predict2(EmlakQueryItem emlak,String all) throws ClientProtocolException, IOException{
 	HttpHost proxy = new HttpHost("localhost", 8888);
 	DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
 	
@@ -85,10 +92,21 @@ public String predict2(EmlakQueryItem emlak) throws ClientProtocolException, IOE
 	CloseableHttpClient client3 = HttpClients.custom().setRoutePlanner(routePlanner).build();
 	
 
-	
+	String urlLocal="";
+	String localKey="";
+	if(all.equals("all")){
+		urlLocal = url;
+		localKey = key;
+	}else if(all.equals("beylikduzu")){
+		urlLocal = urlbeylikduzu;
+		localKey = keyBeylikduzu;
+	}else if(all.equals("beylikduzuSegment")){
+		urlLocal = urlbeylikduzusegment;
+		localKey = keybeylikduzusegment;
+	}
 	
 	//HttpGet request = new HttpGet(url);
-	HttpPost request = new HttpPost(url);
+	HttpPost request = new HttpPost(urlLocal);
 	
  
 	// add request header
@@ -97,7 +115,7 @@ public String predict2(EmlakQueryItem emlak) throws ClientProtocolException, IOE
 	request.addHeader("Connection","keep-alive");
 	request.addHeader("Accept-Encoding","identity");
 	//request.addHeader("Accept","application/json");
-	request.addHeader("Authorization","Bearer "+ "grh2aawJgjFBrt0/YmQNHOE9zzbDROE5Ft3RSnG9snjZEZzAYexNESEaIykG+YLdAvx3q+rEolHKP1WufYqy6g==");											
+	request.addHeader("Authorization","Bearer "+ localKey);											
 
 	
 	//String  params ="{\"Id\": \"score00001\", \"Instance\": { \"FeatureVector\": { \"fiyat\": \"0\",                                                                                                                                                                                                          \"il\": \"sehirvalue\", \"ilce\": \"ilcevalue\", \"mahalle\": \"mahallevalue\", \"krediyeUygun\": \"krediyeUygunvalue\",\"emlaktipi\": \"emlaktipivalue\", \"yil\": \"yilvalue\", \"m2\": \"m2value\",\"odasayisi\":\"odasayisivalue\",\"banyosayisi\": \"banyosayisivalue\",\"binayasi\": \"binayasivalue\",\"binakatsayisi\": \"binakatsayisivalue\",\"bulundugukat\": \"bulundugukatvalue\",\"isitma\": \"isitmavalue\",\"kullanimdurumu\": \"kullanimdurumuvalue\",\"siteicinde\": \"siteicindevalue\",\"kimden\": \"kimdenvalue\"},\"GlobalParameters\": {\"Append score columns to output\": \"True\"}}}";

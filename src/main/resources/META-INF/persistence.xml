@@ -16,6 +16,7 @@
 		<class>org.slevin.common.Semt</class>
 		<class>org.slevin.common.Mahalle</class>
 		<class>org.slevin.common.EmlakRawData</class>
+		<class>org.slevin.common.QualityReport</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		
 
