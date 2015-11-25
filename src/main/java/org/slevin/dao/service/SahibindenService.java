@@ -396,10 +396,11 @@ int artisMiktari = 100;
 	
 	
 	public void exportToFileByIlce(String directoryPath) throws Exception{
-		FileUtil.resetFile();
+		//FileUtil.resetFile();
 		Date startDate = new Date();
 		List<Emlak> emlakList ;
 		List<Ilce> ilceList = ilceDao.findByProperty("sehir.name", "İstanbul");
+		ilceList = ilceDao.findAll();
 		for (Iterator iterator = ilceList.iterator(); iterator.hasNext();) {
 			Ilce ilce = (Ilce) iterator.next();
 

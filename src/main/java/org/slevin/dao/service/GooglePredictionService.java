@@ -185,7 +185,7 @@ public class GooglePredictionService implements GooglePredictionDao {
 		content.setStorageDataLocation(location);
 		content.setId(id);
 		Insert2 insert = prediction.trainedmodels().insert(PROJECT_NAME, content).execute();
-		System.out.println("bitti");
+		//System.out.println("bitti");
 	}
 	
 	public Insert2 getTrainingModel(String name) throws Exception{

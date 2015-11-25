@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.persistence.TemporalType;
+
 import org.hibernate.HibernateException;
-import org.python.icu.math.BigDecimal;
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.dao.EmlakDao;
@@ -108,5 +109,14 @@ public class EmlakService extends EntityService<Emlak> implements EmlakDao {
 		return (List<Emlak>) getEntityManager().createQuery("select x from " + getEntityClass().getSimpleName() + " x where x.exportComplated=false and x.ilce=?1 and x.currency like '%TL%' and x.fiyatLong>"+minimum+" and fiyatLong<"+maximum).setParameter(1, " "+name).getResultList();
 	}
 	
+	@Override
+	public List<Emlak> findAllEmlak(Date startDate,Date endDate) {    
+		  List<Emlak> allEvents = entityManager.createQuery("SELECT e FROM Emlak e WHERE e.currency like '%TL%' and e.insertDate BETWEEN :startDate AND :endDate")  
+		  .setParameter("startDate", startDate, TemporalType.DATE)  
+		  .setParameter("endDate", endDate, TemporalType.DATE)  
+		  .getResultList();
+		        
+		  return allEvents ;  
+		    }
 }
 

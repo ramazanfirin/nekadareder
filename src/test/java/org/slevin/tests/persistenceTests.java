@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -100,6 +101,8 @@ public class persistenceTests {
 	
 	@Autowired
 	UpgradeModelDao upgradeModelDao;
+	
+
 	
 	//@Test
 	@Transactional
@@ -643,8 +646,62 @@ public class persistenceTests {
 //    	testTrainingComplated(path);
     	//insertTestData();
     	
-//upgradeModelDao.upgrade("13112015");
-    	upgradeModelDao.checkUpgradeComplated("13112015");
+//upgradeModelDao.upgrade("19112015");
+   // 	upgradeModelDao.checkUpgradeComplated("19112015");
+    	
+    	batchPredict();
+    }
+    
+    public void batchPredict() throws Exception{
+    	
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(2015, 10, 15,0,0,0);
+    	Date dateStart = cal.getTime();
+    	
+    	cal.set(2015, 10, 16,0,0,0);
+    	Date dateEnd= cal.getTime();
+    	
+    	List<Emlak> emlakList = emlakDao.findAllEmlak(dateStart,dateEnd);
+    	String trainingModelName;
+    	String segment;
+    	BigDecimal fiyat;
+    	for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			Emlak emlak2 = (Emlak) iterator.next();
+			Ilce ilce = getIlcebyName(emlak2.getIlce().replaceFirst(" ", ""));
+			fiyat = new BigDecimal(emlak2.getFiyat());
+			segment = getSegment(fiyat.longValue());
+			
+			trainingModelName=ilce.getId()+"_"+ilce.getName() + "_"+segment+".cvs";
+			BigDecimal predict = predict(emlak2, trainingModelName,false);
+			
+			
+			createReport(fiyat,emlak2.getIlce(),emlak2.getSehir(),predict,null,new Long(segment));
+		}
+    	
+    	
+    }
+    
+    public Ilce getIlcebyName(String name) throws Exception{
+    	List<Ilce> ilceList = ilceDao.findByProperty("name",name);
+    	return ilceList.get(0);
+    }
+    
+    public String getSegment(Long fiyat){
+    	String segment="5";
+       	if(fiyat>10000 && fiyat<150000)
+    		segment="0";
+    	else if(fiyat>150000 && fiyat<350000)
+    		segment="1";
+    	else if(fiyat>350000 && fiyat<550000)
+    		segment="2";
+    	else if(fiyat>550000 && fiyat<800000)
+    		segment="3";
+    	else if(fiyat>800000 && fiyat<10000000)
+    		segment="4";
+    	else
+    		segment="5";
+    	
+    	return segment;
     }
 }
 	

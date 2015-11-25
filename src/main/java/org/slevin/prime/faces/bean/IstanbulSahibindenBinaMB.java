@@ -1,6 +1,7 @@
 package org.slevin.prime.faces.bean;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,16 +12,21 @@ import javax.faces.bean.ApplicationScoped;
 
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
+import org.slevin.common.Ilce;
 import org.slevin.common.Mahalle;
+import org.slevin.common.QualityReport;
 import org.slevin.common.Sehir;
 import org.slevin.dao.AmazonPredictionDao;
 import org.slevin.dao.AzurePredictionDao;
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.EmlakDao;
 import org.slevin.dao.GooglePredictionDao;
+import org.slevin.dao.IlceDao;
 import org.slevin.dao.MahalleDao;
+import org.slevin.dao.QualityReportDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
+import org.slevin.dao.UpgradeModelDao;
 import org.slevin.util.ConstantsUtil;
 import org.slevin.util.ConvertUtil;
 import org.slevin.util.EmlakQueryItem;
@@ -48,6 +54,9 @@ public class IstanbulSahibindenBinaMB {
 	SehirDao sehirDao;
 	
 	@Autowired
+	IlceDao ilceDao;
+	
+	@Autowired
 	MahalleDao mahalleDao;
 	
 	@Autowired
@@ -61,6 +70,12 @@ public class IstanbulSahibindenBinaMB {
 	
 	@Autowired
 	AzurePredictionDao azurePredictionDao;
+	
+	@Autowired
+	UpgradeModelDao upgradeModelDao;
+	
+	@Autowired
+	QualityReportDao qualityReportDao;
 	
 	long complatedCount;
 	
@@ -84,12 +99,119 @@ public class IstanbulSahibindenBinaMB {
 	
 	String inputTextArea;
 	
+	String bucketName;
 	
 	@PostConstruct
     public void init() throws Exception {
 		complatedCount  = sahibindenDao.complatedCount();
 		
     }
+	
+	public void updateVersion() throws Exception{
+		upgradeModelDao.upgrade(bucketName);
+	}
+	
+	public void bulkTestVersion() throws Exception{
+		
+		Calendar cal = Calendar.getInstance();
+    	cal.set(2015, 10, 15,0,0,0);
+    	Date dateStart = cal.getTime();
+    	
+    	cal.set(2015, 10, 16,0,0,0);
+    	Date dateEnd= cal.getTime();
+    	
+    	List<Emlak> emlakList = emlakDao.findAllEmlak(dateStart,dateEnd);
+    	String trainingModelName;
+    	String segment;
+    	BigDecimal fiyat;
+    	int count=0;
+    	for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			try {
+				if(count>1000)
+					break;
+				Emlak emlak2 = (Emlak) iterator.next();
+				Ilce ilce = getIlcebyName(emlak2.getIlce().replaceFirst(" ", ""));
+				fiyat = new BigDecimal(emlak2.getFiyat());
+				segment = getSegment(fiyat.longValue());
+				System.out.println(fiyat+ " "+segment);
+				trainingModelName=ilce.getId()+"_"+ilce.getName() + "_"+segment+".cvs";
+				BigDecimal predict = predict(emlak2, trainingModelName,false);
+				
+				Double rate = new Double(fiyat.doubleValue()/predict.doubleValue());
+				
+				createReport(emlak2.getIlanNo().toString(),fiyat,emlak2.getIlce(),emlak2.getSehir(),predict,null,new Long(segment));
+				System.out.println(rate +" "+emlak2.getIlanNo()+" "+emlak2.getFiyat()+" "+predict+" "+ emlak2.getIlce()+" "+emlak2.getSehir()+" "+predict+" "+segment);
+				count++;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    	
+		
+		
+	}
+	
+	public BigDecimal predict(Emlak emlak,String trainingModelName,boolean forTest) throws Exception{
+		EmlakQueryItem emlakQueryItem = ConvertUtil.convertToEmlakQueryItem(emlak);
+		emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
+		emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
+		emlakQueryItem.setBinaYasi(ConvertUtil.prepareBinaYasi(emlakQueryItem.getBinaYasi()));
+		emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
+		emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
+		
+		
+		BigDecimal predict;
+		if (!forTest) {
+			predict = getGooglePredict(emlakQueryItem,trainingModelName);
+		}else
+			predict = getGooglePredict(emlakQueryItem);
+		
+		return predict;
+	}
+	
+	public BigDecimal getGooglePredict(EmlakQueryItem emlakQueryItem,String trainModelName) throws Exception {
+		return new BigDecimal(googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainModelName));
+	}
+	
+	 public Ilce getIlcebyName(String name) throws Exception{
+	    	List<Ilce> ilceList = ilceDao.findByProperty("name",name);
+	    	return ilceList.get(0);
+	    }
+	    
+	    public String getSegment(Long fiyat){
+	    	String segment="5";
+	       	if(fiyat>10000 && fiyat<=150000)
+	    		segment="0";
+	    	else if(fiyat>150000 && fiyat<=350000)
+	    		segment="1";
+	    	else if(fiyat>350000 && fiyat<=550000)
+	    		segment="2";
+	    	else if(fiyat>550000 && fiyat<=800000)
+	    		segment="3";
+	    	else if(fiyat>800000 && fiyat<10000000)
+	    		segment="4";
+	    	else
+	    		segment="5";
+	    	
+	    	return segment;
+	    }
+	    
+	    public void createReport(String ilanNo,BigDecimal fiyat,String ilce,String sehir,BigDecimal prediction,BigDecimal predictionOriginal,Long segment) throws Exception{
+			QualityReport report= new QualityReport();
+			report.setIlanNo(ilanNo);
+			report.setFiyat(fiyat);
+			report.setIlce(ilce);
+			report.setSehir(sehir);
+			report.setPrediction(prediction);
+			//report.setPredictionOriginal(predictionOriginal);
+			report.setSuccessRate(new Double(fiyat.doubleValue()/prediction.doubleValue()));
+			report.setSegment(segment);
+			System.out.println("rate ="+report.getSuccessRate());
+			qualityReportDao.persist(report);;
+
+		}
+			
 	
 	public void predictVersion2() throws Exception{
 		String url = "https://api.sahibinden.com/sahibinden-ral/rest/classifieds/__parameter__?language=tr";
@@ -432,5 +554,13 @@ public class IstanbulSahibindenBinaMB {
 
 	public void setInputTextArea(String inputTextArea) {
 		this.inputTextArea = inputTextArea;
+	}
+
+	public String getBucketName() {
+		return bucketName;
+	}
+
+	public void setBucketName(String bucketName) {
+		this.bucketName = bucketName;
 	}
 }

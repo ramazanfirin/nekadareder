@@ -43,18 +43,21 @@ public class UpgradeModelService implements UpgradeModelDao{
 	@Override
 	public void upgrade(String bucketName) throws Exception {
 		String directoryName =path+bucketName ;
-		
-		File file = new File(directoryName);
-		if(!file.exists())
-			file.mkdir();
-		
-		
-		
-		//sahibindenDao.exportToFileByIlce(directoryName);
-		createBucket(bucketName);
-		uploadAllFiles(bucketName,directoryName);
-		prepareTrainingModels(bucketName);
-		
+//		System.out.println("directory name:"+directoryName);
+//		File file = new File(directoryName);
+//		if(!file.exists()){
+//			file.mkdir();
+//			System.out.println(directoryName+" olusturuldu");
+//		}else{
+//			System.out.println(directoryName+" mevcut");
+//		}
+//		
+//		
+//	sahibindenDao.exportToFileByIlce(directoryName);
+//		createBucket(bucketName);
+//		uploadAllFiles(bucketName,directoryName);
+//		prepareTrainingModels(bucketName);
+		traingNewModelsByLocal(bucketName,directoryName);
 	}
 	
 	
@@ -65,15 +68,30 @@ public class UpgradeModelService implements UpgradeModelDao{
     	File[] listOfFiles = folder.listFiles();
 		System.out.println("lokal dosya sayisi:"+listOfFiles.length);
 		
-		List<String> bucketFileList =getBucketList(bucketName);
-		System.out.println("bucket dosya sayisi:"+bucketFileList.size());
+//		List<String> bucketFileList =getBucketList(bucketName);
+//		System.out.println("bucket dosya sayisi:"+bucketFileList.size());
 		
-		List<Insert2> trainingList= getTrainingModels();
+		List<String> trainingList= getTrainingModelsAsString();
 		System.out.println("training Model sayisi:"+trainingList.size());
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+			
+		File file = listOfFiles[i];
+			if(!trainingList.contains(file.getName())){
+				try {
+					//googlePredictionDao.insertTrainingModel(file.getName(),bucketName+"/"+file.getName());	
+					System.out.println(file.getName()+" tekrar insert edildi.");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 	
 	 public void prepareTrainingModels(String bucketName) throws Exception{
-	    	deleteAllTrainingModels();
+	    	//deleteAllTrainingModels();
 	    	traingNewModels(bucketName);
 	    }
 	    
@@ -82,13 +100,41 @@ public class UpgradeModelService implements UpgradeModelDao{
 			for (Iterator iterator = objectList.iterator(); iterator.hasNext();) {
 				StorageObject storageObject = (StorageObject) iterator.next();
 				if (!trainingModelPresents(storageObject.getName())) {
-					googlePredictionDao.insertTrainingModel(storageObject.getName(),storageObject.getBucket()+"/"+storageObject.getName());	
-					
+					try {
+						googlePredictionDao.insertTrainingModel(storageObject.getName(),storageObject.getBucket()+"/"+storageObject.getName());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+					System.out.println(storageObject.getName()+" model insert yapildi.");
+				}else{
+					System.out.println(storageObject.getName()+" model mevcut.");
 				}
 				
 			}
 			
 			System.out.println("insert training bitti");
+	    }
+	    
+	    public void traingNewModelsByLocal(String bucketName,String directoryPath) throws Exception{
+	    	File folder = new File(directoryPath);
+	    	File[] listOfFiles = folder.listFiles();
+			
+	    	for (int i = 0; i < listOfFiles.length; i++) {
+				if (!trainingModelPresents(listOfFiles[i].getName())) {
+					try {
+						googlePredictionDao.insertTrainingModel(listOfFiles[i].getName(),bucketName+"/"+listOfFiles[i].getName());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+					System.out.println(listOfFiles[i].getName()+" model insert yapildi."+i);
+				}else{
+					System.out.println(listOfFiles[i].getName()+" model mevcut."+i);
+				}
+				
+			}
+	    	System.out.println("insert training bitti");
 	    }
 	    
 	    public Boolean trainingModelPresents(String name) throws Exception{
@@ -117,6 +163,18 @@ public class UpgradeModelService implements UpgradeModelDao{
 	    	List<Insert2> list = googlePredictionDao.listTrainingModel();
 	    	//System.out.println("size " +list.size());
 	    	return list;
+	    }
+	    
+	    public List<String> getTrainingModelsAsString() throws Exception{
+	    	List<String> resultList = new ArrayList<String>();
+	    	List<Insert2> list = getTrainingModels();
+	    	//System.out.println("size " +list.size());
+	    	for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Insert2 insert2 = (Insert2) iterator.next();
+				resultList.add(insert2.getId());
+			}
+	    	
+	    	return resultList;
 	    } 
 	
 	 public void createBucket(String bucketName) throws Exception{

@@ -26,6 +26,7 @@ public class QualityReport {
 	BigDecimal prediction;
 	BigDecimal predictionOriginal;
 	Double successRate;
+	String ilanNo;
 	
 	Long segment;
 	public Long getId() {
@@ -75,6 +76,12 @@ public class QualityReport {
 	}
 	public void setSegment(Long segment) {
 		this.segment = segment;
+	}
+	public String getIlanNo() {
+		return ilanNo;
+	}
+	public void setIlanNo(String ilanNo) {
+		this.ilanNo = ilanNo;
 	}
 	
 	

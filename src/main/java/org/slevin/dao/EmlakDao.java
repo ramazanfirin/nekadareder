@@ -1,6 +1,7 @@
 package org.slevin.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -21,4 +22,6 @@ public interface EmlakDao extends EntityDao<Emlak> {
 	public List<Emlak> findunMigretedFiyat(int limit) throws HibernateException, Exception;
 	
 	public List<Emlak> exportByIlce(String name,BigDecimal minimum,BigDecimal maximum) throws HibernateException, Exception;
+	
+	public List<Emlak> findAllEmlak(Date startDate,Date endDate) throws HibernateException, Exception;
 }

@@ -210,16 +210,18 @@ public class QueryMB implements Serializable {
 	public String findSegment(){
 		String segment="";
 		BigDecimal fiyat = new BigDecimal(emlakQueryItem.getFiyat());
-		
-		if((fiyat.longValue()>150000) && (fiyat.longValue()<350000))
+		if((fiyat.longValue()>10000) && (fiyat.longValue()<=150000))
+			segment ="_0.cvs";
+		else if((fiyat.longValue()>150000) && (fiyat.longValue()<=350000))
 			segment ="_1.cvs";
-		else if((fiyat.longValue()>350000) && (fiyat.longValue()<550000))
+		else if((fiyat.longValue()>350000) && (fiyat.longValue()<=550000))
 			segment ="_2.cvs";
-		else if((fiyat.longValue()>550000) && (fiyat.longValue()<800000))
+		else if((fiyat.longValue()>550000) && (fiyat.longValue()<=800000))
 			segment ="3.cvs";
-		else if((fiyat.longValue()>800000) && (fiyat.longValue()<10000000))
+		else if((fiyat.longValue()>800000) && (fiyat.longValue()<=10000000))
 			segment ="_4.cvs";
-		
+		else
+			segment ="_5.cvs";
 		return segment;
 	}
 	
