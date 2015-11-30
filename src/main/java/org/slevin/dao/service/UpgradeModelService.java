@@ -43,21 +43,21 @@ public class UpgradeModelService implements UpgradeModelDao{
 	@Override
 	public void upgrade(String bucketName) throws Exception {
 		String directoryName =path+bucketName ;
-//		System.out.println("directory name:"+directoryName);
-//		File file = new File(directoryName);
-//		if(!file.exists()){
-//			file.mkdir();
-//			System.out.println(directoryName+" olusturuldu");
-//		}else{
-//			System.out.println(directoryName+" mevcut");
-//		}
-//		
-//		
-//	sahibindenDao.exportToFileByIlce(directoryName);
-//		createBucket(bucketName);
-//		uploadAllFiles(bucketName,directoryName);
-//		prepareTrainingModels(bucketName);
-		traingNewModelsByLocal(bucketName,directoryName);
+		System.out.println("directory name:"+directoryName);
+		File file = new File(directoryName);
+		if(!file.exists()){
+			file.mkdir();
+			System.out.println(directoryName+" olusturuldu");
+		}else{
+			System.out.println(directoryName+" mevcut");
+		}
+		
+		
+	sahibindenDao.exportToFileByIlce(directoryName);
+		createBucket(bucketName);
+		uploadAllFiles(bucketName,directoryName);
+		prepareTrainingModels(bucketName);
+		//traingNewModelsByLocal(bucketName,directoryName);
 	}
 	
 	
@@ -140,7 +140,7 @@ public class UpgradeModelService implements UpgradeModelDao{
 	    public Boolean trainingModelPresents(String name) throws Exception{
 	    	try {
 				Insert2 get = googlePredictionDao.getTrainingModel(name);
-				return true;
+				return false;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();

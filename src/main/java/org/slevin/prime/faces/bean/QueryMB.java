@@ -194,11 +194,18 @@ public class QueryMB implements Serializable {
 	}
 	
 	public void predict2() throws Exception{
-		prepareEmlakQueryItem();
-		Ilce ilce = findIlce();
-		String trainingName = ilce.getId()+"_"+ilce.getName() + findSegment();
-		predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainingName);
+//		prepareEmlakQueryItem();
+//		Ilce ilce = findIlce();
+//		String trainingName = ilce.getId()+"_"+ilce.getName() + findSegment();
+//		predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainingName);
+//		BigDecimal bd = new BigDecimal(predictValue);
+		
+		BigDecimal predict = sahibindenDao.predict(emlakQueryItem);
+		predictValue = predict.toPlainString();
 		addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+	
+	
+		//System.out.println("bd="+bd+",predict="+predict);
 	}
 	
 	public Ilce findIlce() throws Exception{
@@ -303,6 +310,7 @@ public void predictBeylikduzuSegment() throws Exception{
 		emlakQueryItem.setBinaYasi(ConvertUtil.prepareBinaYasi(emlakQueryItem.getBinaYasi()));
 		emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
 		emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
+		emlakQueryItem.setM2(ConvertUtil.prepareM2(emlakQueryItem.getM2()));
 	}
 	
 	

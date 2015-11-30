@@ -646,10 +646,10 @@ public class persistenceTests {
 //    	testTrainingComplated(path);
     	//insertTestData();
     	
-//upgradeModelDao.upgrade("19112015");
+//upgradeModelDao.upgrade("30112015");
    // 	upgradeModelDao.checkUpgradeComplated("19112015");
     	
-    	batchPredict();
+   batchPredict();
     }
     
     public void batchPredict() throws Exception{
@@ -673,7 +673,6 @@ public class persistenceTests {
 			
 			trainingModelName=ilce.getId()+"_"+ilce.getName() + "_"+segment+".cvs";
 			BigDecimal predict = predict(emlak2, trainingModelName,false);
-			
 			
 			createReport(fiyat,emlak2.getIlce(),emlak2.getSehir(),predict,null,new Long(segment));
 		}

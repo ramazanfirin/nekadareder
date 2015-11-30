@@ -111,8 +111,10 @@ public class GooglePredictionService implements GooglePredictionDao {
 		// prediction.trainedmodels().predict(PROJECT_NAME,MODEL_ID,
 		// input).execute();
 		// String result =output.getOutputValue().toString();
+		System.out.println(input);
 		String result = makePredictionWorkAround(prediction, input, all);
 		System.out.println("prediction = " + result);
+		
 		return result;
 	}
 

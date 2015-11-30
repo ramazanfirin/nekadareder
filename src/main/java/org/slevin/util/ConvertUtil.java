@@ -12,65 +12,125 @@ public static String convertCVSFormat(Emlak emlak){
 	result.append(",");
 	result.append(appendQuata(emlak.getSehir()));
 	result.append(",");
-	result.append(appendQuata(emlak.getIlce()).replaceFirst("\\s+", ""));
+	result.append(appendQuata(emlak.getIlce()).replaceFirst("\\s+", "").replace(" ", "_"));
 	result.append(",");
-	result.append(appendQuata(emlak.getMah()).replaceFirst("\\s+", ""));
+	result.append(appendQuata(emlak.getMah()).replaceFirst("\\s+", "").replace(" ", "_"));
 	result.append(",");
 	result.append(appendQuata(emlak.getKrediyeUygun()));
 	result.append(",");
-	result.append(appendQuata(emlak.getEmlakTipi()));
+	result.append(appendQuata(emlak.getEmlakTipi()).replace(" ", "_"));
 	result.append(",");
 	result.append(emlak.getYil());
 	result.append(",");
-	result.append(emlak.getM2());
+	result.append(prepareM2(emlak.getM2()));
 	result.append(",");
 	result.append(prepareOdaSayisi(emlak.getOdaSayisi().replaceAll("\"", "")));
 	result.append(",");
-	result.append(prepareBanyoSayisi(emlak.getBanyoSayisi()));
-	result.append(",");
+//	result.append(prepareBanyoSayisi(emlak.getBanyoSayisi()));
+//	result.append(",");
 	result.append(prepareBinaYasi(emlak.getBinaYasi().replaceAll("\"", "")));
 	result.append(",");
-	result.append(prepareBinaKatSayisi(emlak.getBinaKatSayisi()));
-	result.append(",");
+//	result.append(prepareBinaKatSayisi(emlak.getBinaKatSayisi()));
+//	result.append(",");
 	result.append(prepareBulunduguKat(emlak.getBulunduguKat()));
 	result.append(",");
-	result.append(prepareIsitma(emlak.getIsitma()));
+	result.append(prepareIsitma(emlak.getIsitma()).replace(" ", "_"));
 	result.append(",");
-	result.append(prepareKullanimDurumu(emlak.getKullanimDurumu()));
+	result.append(prepareKullanimDurumu(emlak.getKullanimDurumu()).replace(" ", "_"));
 	result.append(",");
-	result.append(prepareSiteIcinde(emlak.getSiteIcinde()));
+	result.append(prepareSiteIcinde(emlak.getSiteIcinde()).replace(" ", "_"));
 	result.append(",");
-	result.append(prepareKimden(emlak.getKimden()));
+	result.append(prepareKimden(emlak.getKimden()).replace(" ", "_"));
 
 	return result.toString();
+	
+	//100000.0,"İstanbul","Adalar","Kaşıkadası","false","Satılık Daire",2015,150 ,10  ,50   ,50  ,100,    50,   100   ,10      ,10,      95
+	//  m2,oda, banyo ,yaş,k.sayisi,b.kat,isitma,kullanım,siteiçi,kimden                                                 
+}
+public static String prepareKrediyeUygun(String string){
+	int result = Integer.parseInt(string);
+	result = result+50;
+	return String.valueOf(result);
+}
+
+public static String prepareM2(String string){
+	int result = Integer.parseInt(string);
+	result = result+1000;
+	return String.valueOf(result);
 }
 
 public static String prepareIsitma(String string){
-	if(string.equals("") || string.contains("-1"))
-		return "Doğalgaz (Kombi)";
-	else
-		return string;
+	int result =100;
+	if(string.equals("") || string.contains("-1") )
+		result =100;
+	else if(string.equals("Yok"))
+		result =100;
+	else if(string.equals("Soba"))
+		result =110;
+	else if(string.equals("Doğalgaz Sobası"))
+		result =120;
+	else if(string.equals("Kat Kaloriferi"))
+		result =130;
+	else if(string.equals("Merkezi Sistem"))
+		result =140;
+	else if(string.equals("Merkezi Sistem (Isı Pay Ölçer)"))
+		result =150;
+	else if(string.equals("Doğalgaz (Kombi)"))
+		result =120;
+	else if(string.equals("Yerden Isıtma"))
+		result =160;
+	else if(string.equals("Güneş Enerjisi"))
+		result =170;
+	else if(string.equals("Jeotermal"))
+		result =180;
+	
+		//return String.valueOf(result);
+	return string;
 }
 
 public static String prepareKullanimDurumu(String string){
+	int result=0;
 	if(string.contains("-1"))
-		return "Boş";
-	else
+		result = 7;
+	else if(string.contains("Boş"))
+		result =10;
+	else if(string.contains("Kiracılı"))
+		result =8;
+	else if(string.contains("Mülk Sahibi"))
+		result =9;
+	
+		//return String.valueOf(result);
 		return string;
 }
 
 public static String prepareKimden(String string){
+	int result =0;
 	if(string.equals("0") || string.contains("-1"))
-		return "Sahibinden";
-	else
-		return string;
+		result= 100;
+	if(string.contains("Sahibinden"))
+		result= 100;
+	if(string.contains("Emlak Ofisinden"))
+		result =95;
+	if(string.contains("İnşaat Firmasından"))
+		result =90;
+	if(string.contains("Bankadan"))
+		result =85;
+	
+	//return String.valueOf(result);
+	return string;
 }
 
 public static String prepareSiteIcinde(String string){
+	int result=0;
 	if(string.equals("") || string.contains("-1"))
-		return "Hayır";
-	else
-		return string;
+		result=8;
+
+	if(string.contains("Evet"))
+			result=10;
+	else if(string.contains("Hayır"))
+			result=8;		
+	//return String.valueOf(result);
+	return string;
 }
 
 
@@ -89,90 +149,101 @@ public static String appendQuata(String string){
 }
 
 public static String prepareOdaSayisi(String odaSayisi){
-	String result ="";
+	int result =0;
 	//System.out.println(odaSayisi);
 	if(odaSayisi.equals("Stüdyo (1+0)"))
-		return "0";
-	if(odaSayisi.equals("10 Üzeri"))
-		return "15";
-	
+		result= 0;
+	else if(odaSayisi.equals("10 Üzeri"))
+		result=15;
+	else{
 	String[] temp=odaSayisi.split("\\+");
 	Long a = new Long(temp[0]);
 	Long b = new Long(0);
 	if(temp.length>1)
 		b = new Long(temp[1]);	
-	Long c = a+b;
-	
-	return c.toString();
+		Long c= a+b;
+	result = c.intValue();
+	}
+	result=result+50;
+	return String.valueOf(result);
 }
 
 
 public static String prepareBanyoSayisi(String banyoSayisi){
+	int result=0;
 	if(banyoSayisi.equals("Yok"))
-		return "0";
+		result =0;;
 	if(banyoSayisi.equals("6 Üzeri"))
-		return "7";
+		result = 7;
 	
-	return banyoSayisi;
+	result = result+50;
+	return String.valueOf(result);
 }
 
 public static String prepareBinaYasi(String binaYasi){
+	int result=0;
 	if(binaYasi.equals("5-10 arası"))
-		return "7";
+		result =7;
 	if(binaYasi.equals("11-15 arası"))
-		return "12";
+		result =12;
 	if(binaYasi.equals("16-20 arası"))
-		return "17";
+		result= 17;
 	if(binaYasi.equals("21-25 arası"))
-		return "22";
+		result= 22;
 	if(binaYasi.equals("26-30 arası"))
-		return "17";
+		result= 17;
 	if(binaYasi.equals("31 ve üzeri"))
-		return "35";
+		result= 35;
 	
-	return binaYasi;
+	result = result+50;
+	return String.valueOf(result);
 }
 
 public static String prepareBinaKatSayisi(String binaKatSayisi){
+	int result=0;
 	if(binaKatSayisi.equals("30 ve üzeri"))
-		return "40";
-	return binaKatSayisi;
+		result=40;
+	else
+		result = Integer.parseInt(binaKatSayisi);
+	result = result+100;
+	return String.valueOf(result);
 }
 
 public static String prepareBulunduguKat(String bulunduguKat){
+	int result=0;
 	if(bulunduguKat.equals("Kot 4"))
-		return "0";
-	if(bulunduguKat.equals("Kot 3"))
-		return "0";
-	if(bulunduguKat.equals("Kot 2"))
-		return "0";
-	if(bulunduguKat.equals("Kot 1"))
-		return "0";
-	if(bulunduguKat.equals("Bodrum Kat"))
-		return "1";
-	if(bulunduguKat.equals("Zemin Kat"))
-		return "1";
-	if(bulunduguKat.equals("Bahçe Katı"))
-		return "1";
-	if(bulunduguKat.equals("Giriş Katı"))
-		return "1";
-	if(bulunduguKat.equals("Yüksek Giriş"))
-		return "1";
-	if(bulunduguKat.equals("Müstakil"))
-		return "2";
-	if(bulunduguKat.equals("Villa Tipi"))
-		return "2";
-	if(bulunduguKat.equals("Çatı Katı"))
-		return "1";
-	if(bulunduguKat.equals("30 ve üzeri"))
-		return "3";
-	
-	
+		result= 0;
+	else if(bulunduguKat.equals("Kot 3"))
+		result =0;
+	else if(bulunduguKat.equals("Kot 2"))
+		result =0;
+	else if(bulunduguKat.equals("Kot 1"))
+		result =0;
+	else if(bulunduguKat.equals("Bodrum Kat"))
+		result =1;
+	else if(bulunduguKat.equals("Zemin Kat"))
+		result =1;
+	else if(bulunduguKat.equals("Bahçe Katı"))
+		result =1;
+	else if(bulunduguKat.equals("Giriş Katı"))
+		result =1;
+	else if(bulunduguKat.equals("Yüksek Giriş"))
+		result =1;
+	else if(bulunduguKat.equals("Müstakil"))
+		result =2;
+	else if(bulunduguKat.equals("Villa Tipi"))
+		result =2;
+	else if(bulunduguKat.equals("Çatı Katı"))
+		result =1;
+	else if(bulunduguKat.equals("30 ve üzeri"))
+		result =3;
+	else
+		result = Integer.parseInt(bulunduguKat);
 //	Long a = new Long(bulunduguKat);
 //	a= a*100;
 //	return a.toString();
-	
-	return bulunduguKat;
+	result = result+100;
+	return String.valueOf(result);
 }
 
 public static EmlakQueryItem convertToEmlakQueryItem(Emlak emlak){
@@ -217,24 +288,56 @@ public static EmlakQueryItem convertToEmlakQueryItem(Emlak emlak){
 
 public static List<Object> convertToObjectList(EmlakQueryItem emlakQueryItem){
 	List<Object> list = new ArrayList<Object>();
-	list.add(emlakQueryItem.getSehir());
-	list.add(emlakQueryItem.getIlce());
-	list.add(emlakQueryItem.getMah());
+	list.add(emlakQueryItem.getSehir().replace(" ", "_"));
+	list.add(emlakQueryItem.getIlce().replace(" ", "_"));
+	list.add(emlakQueryItem.getMah().replace(" ", "_"));
 	list.add(emlakQueryItem.getKrediyeUygun());
-	list.add(emlakQueryItem.getEmlakTipi());
+	list.add(emlakQueryItem.getEmlakTipi().replace(" ", "_"));
 	list.add(emlakQueryItem.getYil());
 	list.add(emlakQueryItem.getM2());
 	
 	list.add(emlakQueryItem.getOdaSayisi());
-	list.add(emlakQueryItem.getBanyoSayisi());
+	//list.add(new Long(emlakQueryItem.getBanyoSayisi()));
 	list.add(emlakQueryItem.getBinaYasi());
-	list.add(emlakQueryItem.getBinaKatSayisi());
+	//list.add(new Long(emlakQueryItem.getBinaKatSayisi()));
 	list.add(emlakQueryItem.getBulunduguKat());
-	list.add(emlakQueryItem.getIsitma());
-	list.add(emlakQueryItem.getKullanimDurumu());
-	list.add(emlakQueryItem.getSiteIcinde());
-	list.add(emlakQueryItem.getKimden());
+	list.add(emlakQueryItem.getIsitma().replace(" ", "_"));
+	list.add(emlakQueryItem.getKullanimDurumu().replace(" ", "_"));
+	list.add(emlakQueryItem.getSiteIcinde().replace(" ", "_"));
+	list.add(emlakQueryItem.getKimden().replace(" ", "_"));
 	
 	return list;
 }
+
+public static String getSegment(Long fiyat){
+	String segment="5";
+   	if(fiyat>10000 && fiyat<=150000)
+		segment="0";
+	else if(fiyat>150000 && fiyat<=350000)
+		segment="1";
+	else if(fiyat>350000 && fiyat<=550000)
+		segment="2";
+	else if(fiyat>550000 && fiyat<=800000)
+		segment="3";
+	else if(fiyat>800000 && fiyat<10000000)
+		segment="4";
+	else
+		segment="5";
+	
+	return segment;
+}
+
+public static EmlakQueryItem prepareEmlakQueryItem(EmlakQueryItem emlakQueryItem){
+	emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
+	emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
+	emlakQueryItem.setBinaYasi(ConvertUtil.prepareBinaYasi(emlakQueryItem.getBinaYasi()));
+	emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
+	emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
+	emlakQueryItem.setM2(ConvertUtil.prepareM2(emlakQueryItem.getM2()));
+	
+	return emlakQueryItem;
+}
+
+
+
 }

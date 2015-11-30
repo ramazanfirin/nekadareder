@@ -14,15 +14,20 @@ import java.util.logging.Logger;
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.Emlak;
 import org.slevin.common.Ilce;
+import org.slevin.common.QualityReport;
 import org.slevin.common.SahibindenItem;
 import org.slevin.common.Sehir;
 import org.slevin.common.Semt;
 import org.slevin.dao.BinaQueryDao;
 import org.slevin.dao.EmlakDao;
+import org.slevin.dao.GooglePredictionDao;
 import org.slevin.dao.IlceDao;
+import org.slevin.dao.QualityReportDao;
 import org.slevin.dao.SahibindenDao;
 import org.slevin.dao.SehirDao;
 import org.slevin.util.ConstantsUtil;
+import org.slevin.util.ConvertUtil;
+import org.slevin.util.EmlakQueryItem;
 import org.slevin.util.FileUtil;
 import org.slevin.util.HttpClientUtil;
 import org.slevin.util.MapUtil;
@@ -53,6 +58,12 @@ public class SahibindenService extends EntityService<SahibindenItem> implements 
 	
 //	@Autowired
 //	SahibindenDao sahibindenDao;
+	
+	@Autowired
+	GooglePredictionDao googlePredictionDao;
+	
+	@Autowired
+	QualityReportDao qualityReportDao;
 	
 int artisMiktari = 100;
 
@@ -400,10 +411,13 @@ int artisMiktari = 100;
 		Date startDate = new Date();
 		List<Emlak> emlakList ;
 		List<Ilce> ilceList = ilceDao.findByProperty("sehir.name", "İstanbul");
-		ilceList = ilceDao.findAll();
+//		ilceList = ilceDao.findAll();
+//		ilceList = ilceDao.findByProperty("id", new Long(8));
 		for (Iterator iterator = ilceList.iterator(); iterator.hasNext();) {
 			Ilce ilce = (Ilce) iterator.next();
-
+			if(ilce.getId()<28)
+				continue;
+			
 			emlakList = emlakDao.exportByIlce(ilce.getName(), new BigDecimal(10000),new BigDecimal(150000));
 			writeToFile(emlakList, ilce.getId()+"_"+ilce.getName() + "_0.cvs",directoryPath);
 			
@@ -437,7 +451,12 @@ int artisMiktari = 100;
 	
 	public void writeToFile(List<Emlak> emlakList,String fileName,String directoryPath){
 		File file =new File(directoryPath+ File.separator+fileName);
-		for (int i = 0; i < 10; i++) {
+		if(file.exists()){
+			System.out.println(file.getName() +" zaten mevcut");
+			return;
+		}	
+			
+		for (int i = 0; i < 100; i++) {
 			
 		
 		for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
@@ -453,8 +472,78 @@ int artisMiktari = 100;
 		}
 		}
 	}
+
+	@Override
+	public void batchPredict(Date startdate, Date endDate) throws Exception {
+		List<Emlak> emlakList = emlakDao.findAllEmlak(startdate,endDate);
+    	
+    	int count=0;
+		
+    	for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
+			try {
+				
+				Emlak emlak2 = (Emlak) iterator.next();
+				if(!emlak2.getSehir().contains("İstanbul"))
+					continue;
+				
+//				if(count>1000)
+//					break;
+				
+				EmlakQueryItem emlakQueryItem = ConvertUtil.convertToEmlakQueryItem(emlak2);
+				predict(emlakQueryItem);
+				count++;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    	
+	}
 	
+	public Ilce getIlcebyName(String name) throws Exception{
+    	List<Ilce> ilceList = ilceDao.findByProperty("name",name);
+    	return ilceList.get(0);
+    }
 	
+	public void createReport(String ilanNo,BigDecimal fiyat,String ilce,String sehir,BigDecimal prediction,BigDecimal predictionOriginal,Long segment) throws Exception{
+		QualityReport report= new QualityReport();
+		report.setIlanNo(ilanNo);
+		report.setFiyat(fiyat);
+		report.setIlce(ilce);
+		report.setSehir(sehir);
+		report.setPrediction(prediction);
+		//report.setPredictionOriginal(predictionOriginal);
+		report.setSuccessRate(new Double(fiyat.doubleValue()/prediction.doubleValue()));
+		report.setSegment(segment);
+		System.out.println("rate ="+report.getSuccessRate());
+		qualityReportDao.persist(report);;
+
+	}
+
+	@Override
+	public BigDecimal predict(EmlakQueryItem source) throws Exception {
+		String trainingModelName;
+    	String segment;
+    	BigDecimal fiyat;
+    	EmlakQueryItem emlak = ConvertUtil.prepareEmlakQueryItem(source);
+    	
+		Ilce ilce = getIlcebyName(emlak.getIlce().replaceFirst(" ", ""));
+		fiyat = new BigDecimal(emlak.getFiyat());
+		segment = ConvertUtil.getSegment(fiyat.longValue());
+		System.out.println(fiyat+ " "+segment);
+		trainingModelName=ilce.getId()+"_"+ilce.getName() + "_"+segment+".cvs";
+		
+		String predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlak),trainingModelName);
+		BigDecimal predict = new BigDecimal(predictValue);
+		//BigDecimal predict = predict(emlak2, trainingModelName,false);
+		
+		Double rate = new Double(fiyat.doubleValue()/predict.doubleValue());
+		
+		createReport(emlak.getIlanNo().toString(),fiyat,emlak.getIlce(),emlak.getSehir(),predict,null,new Long(segment));
+		System.out.println(rate +" "+emlak.getIlanNo()+" "+emlak.getFiyat()+" "+predict+" "+ emlak.getIlce()+" "+emlak.getSehir()+" "+predict+" "+segment);
+		return predict;
+	}
+		
 	
 }
 

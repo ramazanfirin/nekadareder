@@ -120,36 +120,8 @@ public class IstanbulSahibindenBinaMB {
     	cal.set(2015, 10, 16,0,0,0);
     	Date dateEnd= cal.getTime();
     	
-    	List<Emlak> emlakList = emlakDao.findAllEmlak(dateStart,dateEnd);
-    	String trainingModelName;
-    	String segment;
-    	BigDecimal fiyat;
-    	int count=0;
-    	for (Iterator iterator = emlakList.iterator(); iterator.hasNext();) {
-			try {
-				if(count>1000)
-					break;
-				Emlak emlak2 = (Emlak) iterator.next();
-				Ilce ilce = getIlcebyName(emlak2.getIlce().replaceFirst(" ", ""));
-				fiyat = new BigDecimal(emlak2.getFiyat());
-				segment = getSegment(fiyat.longValue());
-				System.out.println(fiyat+ " "+segment);
-				trainingModelName=ilce.getId()+"_"+ilce.getName() + "_"+segment+".cvs";
-				BigDecimal predict = predict(emlak2, trainingModelName,false);
-				
-				Double rate = new Double(fiyat.doubleValue()/predict.doubleValue());
-				
-				createReport(emlak2.getIlanNo().toString(),fiyat,emlak2.getIlce(),emlak2.getSehir(),predict,null,new Long(segment));
-				System.out.println(rate +" "+emlak2.getIlanNo()+" "+emlak2.getFiyat()+" "+predict+" "+ emlak2.getIlce()+" "+emlak2.getSehir()+" "+predict+" "+segment);
-				count++;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-    	
-		
-		
+    	sahibindenDao.batchPredict(dateStart, dateEnd);
+    
 	}
 	
 	public BigDecimal predict(Emlak emlak,String trainingModelName,boolean forTest) throws Exception{
@@ -174,43 +146,7 @@ public class IstanbulSahibindenBinaMB {
 		return new BigDecimal(googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainModelName));
 	}
 	
-	 public Ilce getIlcebyName(String name) throws Exception{
-	    	List<Ilce> ilceList = ilceDao.findByProperty("name",name);
-	    	return ilceList.get(0);
-	    }
-	    
-	    public String getSegment(Long fiyat){
-	    	String segment="5";
-	       	if(fiyat>10000 && fiyat<=150000)
-	    		segment="0";
-	    	else if(fiyat>150000 && fiyat<=350000)
-	    		segment="1";
-	    	else if(fiyat>350000 && fiyat<=550000)
-	    		segment="2";
-	    	else if(fiyat>550000 && fiyat<=800000)
-	    		segment="3";
-	    	else if(fiyat>800000 && fiyat<10000000)
-	    		segment="4";
-	    	else
-	    		segment="5";
-	    	
-	    	return segment;
-	    }
-	    
-	    public void createReport(String ilanNo,BigDecimal fiyat,String ilce,String sehir,BigDecimal prediction,BigDecimal predictionOriginal,Long segment) throws Exception{
-			QualityReport report= new QualityReport();
-			report.setIlanNo(ilanNo);
-			report.setFiyat(fiyat);
-			report.setIlce(ilce);
-			report.setSehir(sehir);
-			report.setPrediction(prediction);
-			//report.setPredictionOriginal(predictionOriginal);
-			report.setSuccessRate(new Double(fiyat.doubleValue()/prediction.doubleValue()));
-			report.setSegment(segment);
-			System.out.println("rate ="+report.getSuccessRate());
-			qualityReportDao.persist(report);;
-
-		}
+	
 			
 	
 	public void predictVersion2() throws Exception{

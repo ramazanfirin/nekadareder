@@ -1,7 +1,11 @@
 package org.slevin.dao;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.slevin.common.BinaQueryItem;
 import org.slevin.common.SahibindenItem;
+import org.slevin.util.EmlakQueryItem;
 
 
 
@@ -42,4 +46,7 @@ public interface SahibindenDao extends EntityDao<SahibindenItem> {
 	
 	public void exportToFile() throws Exception;
 	public void exportToFileByIlce(String directoryPath) throws Exception;
+	
+	public void batchPredict(Date startdate,Date endDate) throws Exception;
+	public BigDecimal predict(EmlakQueryItem emlakQueryItem) throws Exception;
 }
