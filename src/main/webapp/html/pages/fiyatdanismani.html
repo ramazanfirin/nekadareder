@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html class="no-js css-menubar" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta name="description" content="bootstrap admin template">
+  <meta name="author" content="">
+  <title>Fiyat Danışmanı</title>
+  <link rel="apple-touch-icon" href="../Assets/images/apple-touch-icon.png">
+  <link rel="shortcut icon" href="../Assets/images/favicon.ico">
+  <!-- Stylesheets -->
+  
+  
+  
+  <link rel="stylesheet" href="../Assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../Assets/css/bootstrap-extend.min.css">
+  <link rel="stylesheet" href="../Assets/css/site.min.css">
+    <!-- Plugins -->
+    <link rel="stylesheet" href="../Assets/vendor/animsition/animsition.css">
+    <link rel="stylesheet" href="../Assets/vendor/asscrollable/asScrollable.css">
+    <link rel="stylesheet" href="../Assets/vendor/switchery/switchery.css">
+    <link rel="stylesheet" href="../Assets/vendor/intro-js/introjs.css">
+    <link rel="stylesheet" href="../Assets/vendor/slidepanel/slidePanel.css">
+    <link rel="stylesheet" href="../Assets/vendor/flag-icon-css/flag-icon.css">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="../Assets/fonts/weather-icons/weather-icons.css">
+  <link rel="stylesheet" href="../Assets/fonts/web-icons/web-icons.min.css">
+  <link rel="stylesheet" href="../Assets/fonts/brand-icons/brand-icons.min.css">
+  <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,300italic'>
+  <!--[if lt IE 9]>
+    <script src="../Assets/vendor/html5shiv/html5shiv.min.js"></script>
+    <![endif]-->
+  <!--[if lt IE 10]>
+    <script src="../Assets/vendor/media-match/media.match.min.js"></script>
+    <script src="../Assets/vendor/respond/respond.min.js"></script>
+    <![endif]-->
+  <!-- Scripts -->
+  <script src="../Assets/vendor/modernizr/modernizr.js"></script>
+  <script src="../Assets/vendor/breakpoints/breakpoints.js"></script>
+  <script>
+  Breakpoints();
+  </script>
+</head>
+<body class="dashboard">
+  <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+  <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
+    <div class="navbar-header">
+
+      <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+          <img class="navbar-brand-logo" src="../Assets/images/logo.png" title="Fiyat Danışmanı">
+        <span class="navbar-brand-text">Fiyat Danışmanı</span>
+      </div>
+     
+    </div>
+  </nav>
+
+    <!-- Page -->
+    <div class="page animsition">
+      
+        <div class="page-content container-fluid">
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Nasıl Çalışır?</h3>
+                        </div>
+                        <div class="panel-body container-fluid">
+                            <div class="page-content padding-20 blue-grey-500">
+                                <ul class="blocks blocks-100" data-plugin="masonry">
+                                    <li class="masonry-item">
+                                        <div class="widget widget-article widget-shadow">
+                                            <div class="widget-header cover">
+                                                <img class="cover-image" src="../Assets/photos/tower1.jpg" alt="...">
+                                            </div>
+                                            <div class="widget-body">
+                                                <h5 class="widget-title">1 - İlan Kodunu Bulun</h5>
+
+                                                <p>
+                                                    http://www.sahibinden.com/ üzerinden örnek ilan numranızı bulun ve sisteme kopyalayın
+                                                </p>
+
+                                                <h5 class="widget-title">2 - İlan Kodunu Bulun</h5>
+
+                                                <p>
+                                                    http://www.sahibinden.com/ üzerinden örnek ilan numranızı bulun ve sisteme kopyalayın
+                                                </p>
+                                              
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                <div class="col-sm-6">
+                        <!-- Panel Static Lables -->
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Fiyat Danışmanı Sorgu Ekranı</h3>
+                            </div>
+
+                            <div class="panel-body container-fluid">
+                                <div class="form-group form-material row">
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputText">Sahibinden İlan Numarası</label>
+                                        <input type="text" class="form-control" id="inputText" name="inputText" placeholder="İlan No Giriniz" />
+                                    </div>
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Tahmini Fiyatınız</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label">En Uygun Fiyatı Öner</label>
+                                        <button type="button" class="btn btn-block btn-primary">TAMİN ET</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Gayrımenkül Bilgileri</h3>
+                            </div>
+                            <div class="panel-body container-fluid">
+                                <div class="form-group form-material row">
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Gerçek Fiyatı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Emlak Tipi</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Krediye Uygunluk Durumu</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel-body container-fluid">
+                                <div class="form-group form-material row">
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Bulunduğu Şehir</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Bulunduğu İlçe</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Bulunduğu Mahalle</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-material row">
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Yılı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Metrekare</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Binanın Yaşı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-material row">
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Oda Sayısı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Banyo Sayısı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Binadaki Toplam Kat Sayısı</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-material row">
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Iısıtma Durumu</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Kullanım Durumu</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+                                    <div class="col-sm-4 margin-top-10">
+                                        <label class="control-label" for="inputDisabled">Kimden</label>
+                                        <input type="text" class="form-control" id="inputDisabled" placeholder="00.00 TL" disabled>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Panel Static Lables -->
+                    </div>
+
+                <div class="col-sm-4">
+                        <!-- Panel Floating Lables -->
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Örnek Daire</h3>
+                            </div>
+                            <div class="panel-body container-fluid">
+                                <div class="page-content padding-5 blue-grey-500">
+                                    <ul class="blocks blocks-100" data-plugin="masonry">
+                                        <li class="masonry-item">
+                                            <div class="widget widget-article widget-shadow">
+                                                <div class="widget-header cover">
+                                                    <img class="cover-image" src="../Assets/photos/daire1.jpg" alt="...">
+                                                </div>
+                                                <div class="widget-body">
+                                                    <h3 class="widget-title">SAHİBİNDEN Nezih Sitede Bakımlı, 2+1 Daire</h3>
+                                                   
+                                                    <p>
+                                                        Butik site içerisinde, yuksek giris ve 2+1'dir. Dairenin kendine ait otoparki, arka bolumunde bahcesi, bahce icerisinde cardak ve cocuklar icin oyun alani, kendine ait 6 m2 deposu bulunmaktadir. Her turlu ihtiyacinizi kolayca karsilayabileceginiz sorunsuz bir lokasyondan yer almaktadir.
+                                                    </p>
+                                                   
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Panel Floating Lables -->
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- End Page -->
+
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer-legal">© 2016 <a href="#">Fiyat Danışmanı</a></div>
+    
+  </footer>
+  <!-- Core  -->
+  <script src="../Assets/vendor/jquery/jquery.js"></script>
+  <script src="../Assets/vendor/bootstrap/bootstrap.js"></script>
+  <script src="../Assets/vendor/animsition/animsition.js"></script>
+  <script src="../Assets/vendor/asscroll/jquery-asScroll.js"></script>
+  <script src="../Assets/vendor/mousewheel/jquery.mousewheel.js"></script>
+  <script src="../Assets/vendor/asscrollable/jquery.asScrollable.all.js"></script>
+  <script src="../Assets/vendor/ashoverscroll/jquery-asHoverScroll.js"></script>
+  <!-- Plugins -->
+  <script src="../Assets/vendor/switchery/switchery.min.js"></script>
+  <script src="../Assets/vendor/intro-js/intro.js"></script>
+  <script src="../Assets/vendor/screenfull/screenfull.js"></script>
+  <script src="../Assets/vendor/slidepanel/jquery-slidePanel.js"></script>
+  <script src="../Assets/vendor/skycons/skycons.js"></script>
+  <script src="../Assets/vendor/chartist-js/chartist.min.js"></script>
+  <script src="../Assets/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.min.js"></script>
+  <script src="../Assets/vendor/aspieprogress/jquery-asPieProgress.min.js"></script>
+  <script src="../Assets/vendor/jvectormap/jquery.jvectormap.min.js"></script>
+  <script src="../Assets/vendor/jvectormap/maps/jquery-jvectormap-au-mill-en.js"></script>
+  <script src="../Assets/vendor/matchheight/jquery.matchHeight-min.js"></script>
+  <!-- Scripts -->
+  <script src="../Assets/js/core.js"></script>
+  <script src="../Assets/js/site.js"></script>
+  <script src="../Assets/js/sections/menu.js"></script>
+  <script src="../Assets/js/sections/menubar.js"></script>
+  <script src="../Assets/js/sections/gridmenu.js"></script>
+  <script src="../Assets/js/sections/sidebar.js"></script>
+  <script src="../Assets/js/configs/config-colors.js"></script>
+  <script src="../Assets/js/configs/config-tour.js"></script>
+  <script src="../Assets/js/components/asscrollable.js"></script>
+  <script src="../Assets/js/components/animsition.js"></script>
+  <script src="../Assets/js/components/slidepanel.js"></script>
+  <script src="../Assets/js/components/switchery.js"></script>
+  <script src="../Assets/js/components/matchheight.js"></script>
+  <script src="../Assets/js/components/jvectormap.js"></script>
+  <script src="../Assets/examples/js/dashboard/v1.js"></script>
+</body>
+</html>
