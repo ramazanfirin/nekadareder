@@ -20,11 +20,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.python.core.Py;
-import org.python.core.PyObject;
-import org.python.core.PyString;
-import org.python.core.PySystemState;
-import org.python.util.PythonInterpreter;
 
 public class AzureUtil {
 
@@ -71,14 +66,14 @@ public class AzureUtil {
 	}
 	
 	public static void test2() throws Exception{
-		PySystemState sys = Py.getSystemState();
-	     sys.path.append(new PyString("urllib.request"));
-		 
-		 PythonInterpreter.initialize(System.getProperties(),System.getProperties(), new String[0]);
-		 PythonInterpreter interpreter = new PythonInterpreter();
-		 interpreter.execfile("C:\\Users\\ETR00529\\azure3.py");
-		 PyObject x = interpreter.get("result");
-		 
+//		PySystemState sys = Py.getSystemState();
+//	     sys.path.append(new PyString("urllib.request"));
+//		 
+//		 PythonInterpreter.initialize(System.getProperties(),System.getProperties(), new String[0]);
+//		 PythonInterpreter interpreter = new PythonInterpreter();
+//		 interpreter.execfile("C:\\Users\\ETR00529\\azure3.py");
+//		 PyObject x = interpreter.get("result");
+//		 
 		 System.out.println("bitti");
 		 //interpreter.
 	}

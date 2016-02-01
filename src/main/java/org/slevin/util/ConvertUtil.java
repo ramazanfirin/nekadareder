@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.slevin.common.Emlak;
+import org.springframework.util.StringUtils;
 
 public class ConvertUtil {
 public static String convertCVSFormat(Emlak emlak){
@@ -327,6 +328,18 @@ public static String getSegment(Long fiyat){
 	return segment;
 }
 
+public static String prepareKrediyeUygunValue(String value){
+	if(!StringUtils.isEmpty(value)){
+		if(value.equalsIgnoreCase("Evet"))
+			return "true";
+		else if (value.equalsIgnoreCase("Hayır"))
+			return "false";	
+		else 
+			return value;
+	}
+	return value;
+}
+
 public static EmlakQueryItem prepareEmlakQueryItem(EmlakQueryItem emlakQueryItem){
 	emlakQueryItem.setOdaSayisi(ConvertUtil.prepareOdaSayisi(emlakQueryItem.getOdaSayisi()));
 	emlakQueryItem.setBanyoSayisi(ConvertUtil.prepareBanyoSayisi(emlakQueryItem.getBanyoSayisi()));
@@ -334,6 +347,7 @@ public static EmlakQueryItem prepareEmlakQueryItem(EmlakQueryItem emlakQueryItem
 	emlakQueryItem.setBinaKatSayisi(ConvertUtil.prepareBinaKatSayisi(emlakQueryItem.getBinaKatSayisi()));
 	emlakQueryItem.setBulunduguKat(ConvertUtil.prepareBulunduguKat(emlakQueryItem.getBulunduguKat()));
 	emlakQueryItem.setM2(ConvertUtil.prepareM2(emlakQueryItem.getM2()));
+
 	
 	return emlakQueryItem;
 }

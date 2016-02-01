@@ -287,6 +287,16 @@ public static Emlak parseSingleEmlakData(EmlakQueryItem emlak,String result) thr
 	emlak.setLat(object.get("latitude").toString());
 	emlak.setLng(object.get("longitude").toString());
 	//
+	try {
+		JsonArray images = object.get("images").asArray();
+		JsonObject imeges1= images.get(0).asObject();
+		emlak.setImageUrl(imeges1.get("normal").toString().replace("\"", ""));
+		
+		emlak.setDescription(object.get("title").toString().replace("\"", ""));
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	
 	String location = object.get("location").asString();
 	String[] temp = location.split(",");
@@ -337,7 +347,7 @@ public static String getObjectFromArray(JsonArray attributesArray,String name){
 		JsonObject object = attributesArray.get(i).asObject();
 		String key = object.get("name").asString();
 		if(key.equals(name)){
-			System.out.println("aa");
+			//System.out.println("aa");
 			return object.get("value").toString().replace("\"","");
 		}
 		}

@@ -111,6 +111,7 @@ public class QueryMB implements Serializable {
 	
 	String gifPath;
 	
+	Boolean renderIntro=true;
 
 	@PostConstruct
     public void init() throws Exception {
@@ -144,6 +145,10 @@ public class QueryMB implements Serializable {
 //		System.out.println("biit");
 	}
 
+	public void changeRenderIntro(){
+		renderIntro = !renderIntro;
+		System.out.println(renderIntro);
+	}
 	
 	public List<SelectItem> prepareSehirList() throws Exception{
 		List<Sehir> list= sehirDao.findAll() ;
@@ -169,16 +174,26 @@ public class QueryMB implements Serializable {
 			url = url.replace("__parameter__", ilanNo);
 			String result = HttpClientUtil.parse(url);
 			ParseUtil.parseSingleEmlakData(emlakQueryItem,result);
+			if(!emlakQueryItem.getEmlakTipi().equals("Satılık Daire")){
+				addMessage(FacesMessage.SEVERITY_INFO,"Sadece Daire için sorgulama yapılabilir");
+				emlakQueryItem.setFiyat("");
+				return;
+			}
+			
 			ilceList = ilceDao.findByProperty("sehir.name", emlakQueryItem.getSehir());
 			mahalleList = mahalleDao.findByProperty("semt.ilce.name", emlakQueryItem.getIlce());
 			System.out.println(" getDataFromSahibinden bitti");
-			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+			//addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
 			predictValue ="";
 			amazonPredictValue ="";
 			azurePredictValue="";
 			predictValueBeylikduzu ="";
 			amazonPredictValueBeylikduzu ="";
 			azurePredictValueBeylikduzu="";
+			
+			
+				
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -188,10 +203,28 @@ public class QueryMB implements Serializable {
 		}
 	}
 	
-	public void addMessage(Severity severity,String message){
-		 FacesMessage messageobject = new FacesMessage(severity,message, message);
-		FacesContext.getCurrentInstance().addMessage("form:message", messageobject);
+	public void predict2new() throws Exception{
+		try {
+			getDataFromSahibinden();
+			if(!validate())
+				return;
+			
+			EmlakQueryItem temp = (EmlakQueryItem)emlakQueryItem.clone();
+			temp.setKrediyeUygun(ConvertUtil.prepareKrediyeUygunValue(temp.getKrediyeUygun()));
+			BigDecimal predict = sahibindenDao.predict(temp);
+			predictValue = predict.toPlainString();
+//			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			addMessage(FacesMessage.SEVERITY_INFO,"Hata Olustu "+e.getMessage());
+		}
+	
 	}
+	
+	
+	
+	
 	
 	public void predict2() throws Exception{
 //		prepareEmlakQueryItem();
@@ -199,13 +232,45 @@ public class QueryMB implements Serializable {
 //		String trainingName = ilce.getId()+"_"+ilce.getName() + findSegment();
 //		predictValue  = googlePredictionDao.predict(ConvertUtil.convertToObjectList(emlakQueryItem),trainingName);
 //		BigDecimal bd = new BigDecimal(predictValue);
-		
-		BigDecimal predict = sahibindenDao.predict(emlakQueryItem);
-		predictValue = predict.toPlainString();
-		addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+		//getDataFromSahibinden();
+		try {
+			if(!validate())
+				return;
+			BigDecimal predict = sahibindenDao.predict((EmlakQueryItem)emlakQueryItem.clone());
+			predictValue = predict.toPlainString();
+			addMessage(FacesMessage.SEVERITY_INFO,"İstek Tamamlandi");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			addMessage(FacesMessage.SEVERITY_INFO,"Hata Olustu "+e.getMessage());
+		}
 	
 	
 		//System.out.println("bd="+bd+",predict="+predict);
+	}
+	
+	public Boolean validate(){
+		Boolean result=true;
+		if(!emlakQueryItem.getSehir().contains("İstanbul")){
+			addMessage(FacesMessage.SEVERITY_ERROR, "Bu versiyonda sadece şehir 'İstanbul' desteklenmektedir.");
+			result=false;
+		}
+		if(!emlakQueryItem.getEmlakTipi().contains("Satılık Daire")){
+			addMessage(FacesMessage.SEVERITY_ERROR, "Bu versiyonda sadece emlak tipi olarak 'Satılık Daire' desteklenmektedir.");
+			result=false;
+		}
+		if(emlakQueryItem.getKrediyeUygun().contains("false")){
+			addMessage(FacesMessage.SEVERITY_ERROR, "Bu versiyonda sadece Krediy uygun olarak 'Evet' desteklenmektedir.");
+			result=false;
+		}
+		return result;
+		
+
+	}
+	
+	public void addMessage(FacesMessage.Severity severity,String messageText){
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,  messageText, messageText);
+        FacesContext.getCurrentInstance().addMessage("null", message);
 	}
 	
 	public Ilce findIlce() throws Exception{
@@ -594,6 +659,16 @@ public void predictBeylikduzuSegment() throws Exception{
 	public void setAzurePredictValueBeylikduzuSegment(
 			String azurePredictValueBeylikduzuSegment) {
 		this.azurePredictValueBeylikduzuSegment = azurePredictValueBeylikduzuSegment;
+	}
+
+
+	public Boolean getRenderIntro() {
+		return renderIntro;
+	}
+
+
+	public void setRenderIntro(Boolean renderIntro) {
+		this.renderIntro = renderIntro;
 	}
 
 
